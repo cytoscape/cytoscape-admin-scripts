@@ -55,7 +55,7 @@ done
 shift $(($OPTIND - 1))
 
 COMMAND=$1
-TARGET=$2
+TARGET_DIR=$2
 
 if [[ -z $COMMAND ]]; then
   echo "COMMAND is required. $ERROR_MESSAGE" 1>&2
@@ -160,15 +160,14 @@ function confirm {
 #################################################################################
 function init {
   # By default, clone everything in current directory.
-  if [[ "$FLG_D"="TRUE" ]]; then
-    if [[ -z "$TARGET_DIR" ]]; then
-      TARGET_DIR=$(pwd)
-    elif ! [ -e "$TARGET_DIR" ]; then
-      echo "No such dir: $TARGET_DIR"
-      exit 1
-    fi
-  else
+
+  echo "Target directory = $TARGET_DIR"
+
+  if [[ -z "$TARGET_DIR" ]]; then
     TARGET_DIR=$(pwd)
+  elif ! [ -e "$TARGET_DIR" ]; then
+    echo "No such dir: $TARGET_DIR"
+    exit 1
   fi
 
   echo "Cytoscape project will be cloned to: ${TARGET_DIR}"
@@ -177,7 +176,6 @@ function init {
 
   # Clone cy
   let LENGTH=${#BASE_URL}-1
-  echo "LEN = $LENGTH"
 
   CY3REPO_URL=$(echo $BASE_URL | cut -c 1-$LENGTH)
   git clone "${CY3REPO_URL}.git" || { echo Could not clone remote repository: $TARGET_DIR; exit 1; }
