@@ -184,14 +184,17 @@ function init {
   cd cytoscape
 
   for REPO in "${REPOSITORIES[@]}"; do
-    REPO_URL="$BASE_URL$REPO.git"
-    echo "Cloning: $REPO (URI = $REPO_URL)"
-    git clone $REPO_URL $REPO
-    pushd $REPO
-    git checkout master
-    git flow init -d
-    git checkout develop
-    popd
+    if [ ${REPO} != . ]
+    then
+        REPO_URL="$BASE_URL$REPO.git"
+        echo "Cloning: $REPO (URI = $REPO_URL)"
+        git clone $REPO_URL $REPO || { echo Could not clone remote repository: $TARGET_DIR; exit 1; }
+        pushd $REPO
+        git checkout master
+        git flow init -d
+        git checkout develop
+        popd
+    fi
   done
 
   echo "\n\n - Finished: here is the current status:\n"
