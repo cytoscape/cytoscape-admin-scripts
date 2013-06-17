@@ -31,7 +31,7 @@ BASE_URL='git@github.com:cytoscape/cytoscape-'
 NON_CORE_URL='git://github.com/cytoscape/cytoscape-'
 
 # Cytoscape repository names
-REPOSITORIES=(parent api impl support headless-distribution gui-distribution app-developer samples)
+REPOSITORIES=(. parent api impl support headless-distribution gui-distribution app-developer samples)
 
 
 #######################################
@@ -73,43 +73,44 @@ function reset {
 
   for REPO in "${REPOSITORIES[@]}"; do
     echo "\n - Resetting local changes: $REPO"
-    cd $REPO
+    pushd $REPO
     git clean -f
     git reset --hard
-    cd ..
+    popd ..
   done
 }
 
 function pull {
   for REPO in "${REPOSITORIES[@]}"; do
-    cd $REPO
+    pushd $REPO
     echo "Downloading changes from upstream: $REPO"
     git pull
-    cd ..
+    popd
   done
 }
 
 function push {
   echo "- Sending all local commits to upstream..."
   for REPO in "${REPOSITORIES[@]}"; do
-    cd $REPO
+    pushd $REPO
     git push -u origin
-    cd ..
+    popd
   done
 }
 
 function status {
   for REPO in "${REPOSITORIES[@]}"; do
-    cd $REPO || { echo Could not find subproject; exit 1; }
+    pushd $REPO || { echo Could not find subproject; exit 1; }
     echo "\n- $REPO:"
     git status
-    cd ..
+    popd
   done
 
 }
 
 
 function switch {
+  TARGET="${TARGET_DIR}"
   if [[ -z $TARGET ]]; then
     echo "Branch name is required: cy switch BRANCH_NAME" 1>&2
     exit 1
@@ -117,11 +118,11 @@ function switch {
 
   for REPO in "${REPOSITORIES[@]}"; do
     echo "\n - Switching to ${TARGET}: $REPO"
-    cd $REPO || { echo Could not find subproject; exit 1; }
+    pushd $REPO || { echo Could not find subproject; exit 1; }
 
     # Switch
-    git checkout $TARGET || { echo Could not checkout branch $TARGET; exit 1; }
-    cd ..
+    git checkout $TARGET || { echo Could not checkout branch $TARGET; }
+    popd
   done
 
 }
@@ -186,11 +187,11 @@ function init {
     REPO_URL="$BASE_URL$REPO.git"
     echo "Cloning: $REPO (URI = $REPO_URL)"
     git clone $REPO_URL $REPO
-    cd $REPO
+    pushd $REPO
     git checkout master
     git flow init -d
     git checkout develop
-    cd ..
+    popd
   done
 
   echo "\n\n - Finished: here is the current status:\n"
