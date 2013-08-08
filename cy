@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# @(#) cy version 1.0 4/25/2013
+# @(#) cy version 1.1 8/7/2013
 #
 #  USAGE:
 #    init
@@ -31,7 +31,7 @@ BASE_URL='git@github.com:cytoscape/cytoscape-'
 NON_CORE_URL='git://github.com/cytoscape/cytoscape-'
 
 # Cytoscape repository names
-REPOSITORIES=(. parent api impl support headless-distribution gui-distribution app-developer samples)
+REPOSITORIES=(. parent api impl support headless-distribution gui-distribution app-developer)
 
 
 #######################################
