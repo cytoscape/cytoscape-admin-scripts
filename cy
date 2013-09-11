@@ -1,15 +1,14 @@
 #!/bin/sh
 #
-# @(#) cy version 1.0 4/25/2013
+# @(#) cy version 1.2 9/11/2013
 #
 #  USAGE:
 #    init
 #
 # DESCRIPTION:
 #   Cytoscape 3 repository management utility.
-#   This script is only for core developers.
 #
-# Reqiirments:
+# Requirements:
 #   - git
 #   - git-flow
 #
@@ -28,10 +27,10 @@ HELP='Cytoscape repository management tool'
 
 # Git base URL
 BASE_URL='git@github.com:cytoscape/cytoscape-'
-NON_CORE_URL='git://github.com/cytoscape/cytoscape-'
+NON_CORE_URL='https://github.com/cytoscape/cytoscape-'
 
 # Cytoscape repository names
-REPOSITORIES=(. parent api impl support headless-distribution gui-distribution app-developer samples)
+REPOSITORIES=(. parent api impl support headless-distribution gui-distribution app-developer)
 
 
 #######################################
@@ -41,7 +40,8 @@ while getopts 'hrd:' OPT
 do
   case $OPT in
     r)  FLG_R=1
-        echo " - Using read-only repository."
+        BASE_URL=$NON_CORE_URL
+        echo " - Using read-only repository: " + $BASE_URL
         ;;
     h)  FLG_H=1
         echo "$HELP: $ERROR_MESSAGE"
@@ -64,7 +64,7 @@ fi
 
 
 ###############################################################################
-# Functrions
+# Functions
 ###############################################################################
 
 function reset {
@@ -167,11 +167,11 @@ function init {
   if [[ -z "$TARGET_DIR" ]]; then
     TARGET_DIR=$(pwd)
   elif ! [ -e "$TARGET_DIR" ]; then
-    echo "No such dir: $TARGET_DIR"
-    exit 1
+    echo "Creating new directory: $TARGET_DIR"
+    mkdir $TARGET_DIR
   fi
 
-  echo "Cytoscape project will be cloned to: ${TARGET_DIR}"
+  echo "Cytoscape project will be cloned into: ${TARGET_DIR}"
 
   cd $TARGET_DIR || { echo Could not find target directory: $TARGET_DIR; exit 1; }
 
