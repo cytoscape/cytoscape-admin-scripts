@@ -14,6 +14,8 @@
 #
 # By Keiichiro Ono (kono at ucsd edu)
 #
+# TODO: Needs documentation for all commands
+#
 ###############################################################################
 
 # Command Name
@@ -25,8 +27,9 @@ ERROR_MESSAGE="Usage: $CMDNAME [-h] [action]"
 # Help
 HELP='Cytoscape repository management tool'
 
-# Git base URL
+# Git base URL for core developers
 BASE_URL='git@github.com:cytoscape/cytoscape-'
+# For other developers
 NON_CORE_URL='https://github.com/cytoscape/cytoscape-'
 
 # Cytoscape repository names
@@ -171,7 +174,7 @@ function init {
     mkdir $TARGET_DIR
   fi
 
-  echo "Cytoscape project will be cloned into: ${TARGET_DIR}"
+  echo "All Cytoscape subprojects will be cloned into: ${TARGET_DIR}"
 
   cd $TARGET_DIR || { echo Could not find target directory: $TARGET_DIR; exit 1; }
 
@@ -212,7 +215,7 @@ START_DIR=$(pwd)
 
 case $COMMAND in
   init )    init ;;
-  reset )    reset ;;
+  reset )   reset ;;
   push )    push ;;
   pull )    pull ;;
   switch )  switch ;;
