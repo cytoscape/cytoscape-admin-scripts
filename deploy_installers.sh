@@ -89,6 +89,7 @@ ssh grenache mkdir /cellar/users/kono/public_html/data/cy3latest/$deployDir
 scp ./signed/* $server || { echo Abort: Could not upload signed file.; exit 1; }
 scp ./*.exe $server || { echo Abort: Could not upload Windows installers.; exit 1; }
 scp ./*.zip $server || { echo Abort: Could not upload zipped file.; exit 1; }
+scp ./*.gz $server || { echo Abort: Could not upload gzipped file.; exit 1; }
 scp ./*.sh $server || { echo Abort: Could not upload UNIX installer.; exit 1; }
 
 
