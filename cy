@@ -33,7 +33,7 @@ BASE_URL='git@github.com:cytoscape/cytoscape-'
 NON_CORE_URL='https://github.com/cytoscape/cytoscape-'
 
 # Cytoscape repository names
-REPOSITORIES=(. parent api impl support headless-distribution gui-distribution app-developer)
+REPOSITORIES=(. parent api impl support headless-distribution app-developer)
 
 
 #######################################
@@ -111,9 +111,12 @@ function status {
 
 }
 
-
+#
+# Switch to the specified branch.
+#
 function switch {
   TARGET="${TARGET_DIR}"
+  echo Target branch = $TARGET
   if [[ -z $TARGET ]]; then
     echo "Branch name is required: cy switch BRANCH_NAME" 1>&2
     exit 1
