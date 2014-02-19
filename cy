@@ -1,20 +1,19 @@
 #!/bin/sh
 #
-# @(#) cy version 1.2 9/11/2013
+# @(#) cy version 1.2 2/19/2014
 #
 #  USAGE:
 #    init
 #
 # DESCRIPTION:
 #   Cytoscape 3 repository management utility.
+#   This script is only for core developers.
 #
-# Requirements:
+# Reqiirments:
 #   - git
 #   - git-flow
 #
 # By Keiichiro Ono (kono at ucsd edu)
-#
-# TODO: Needs documentation for all commands
 #
 ###############################################################################
 
@@ -27,13 +26,12 @@ ERROR_MESSAGE="Usage: $CMDNAME [-h] [action]"
 # Help
 HELP='Cytoscape repository management tool'
 
-# Git base URL for core developers
+# Git base URL
 BASE_URL='git@github.com:cytoscape/cytoscape-'
-# For other developers
-NON_CORE_URL='https://github.com/cytoscape/cytoscape-'
+NON_CORE_URL='git://github.com/cytoscape/cytoscape-'
 
 # Cytoscape repository names
-REPOSITORIES=(. parent api impl support headless-distribution app-developer)
+REPOSITORIES=(. parent api impl support gui-distribution app-developer)
 
 
 #######################################
@@ -43,8 +41,7 @@ while getopts 'hrd:' OPT
 do
   case $OPT in
     r)  FLG_R=1
-        BASE_URL=$NON_CORE_URL
-        echo " - Using read-only repository: " + $BASE_URL
+        echo " - Using read-only repository."
         ;;
     h)  FLG_H=1
         echo "$HELP: $ERROR_MESSAGE"
@@ -67,7 +64,7 @@ fi
 
 
 ###############################################################################
-# Functions
+# Functrions
 ###############################################################################
 
 function reset {
@@ -77,7 +74,7 @@ function reset {
   for REPO in "${REPOSITORIES[@]}"; do
     echo "\n - Resetting local changes: $REPO"
     pushd $REPO
-    git clean -f
+    git clean -f -d
     git reset --hard
     popd ..
   done
@@ -111,12 +108,9 @@ function status {
 
 }
 
-#
-# Switch to the specified branch.
-#
+
 function switch {
   TARGET="${TARGET_DIR}"
-  echo Target branch = $TARGET
   if [[ -z $TARGET ]]; then
     echo "Branch name is required: cy switch BRANCH_NAME" 1>&2
     exit 1
@@ -137,10 +131,15 @@ function switch {
 function resetAll {
   git checkout master
   git reset --hard $(git BRANCH -av | grep "remotes/origin/master" | awk '{ print $2 }')
+  git clean -d -f
+
   git checkout develop
   git reset --hard $(git BRANCH -av | grep "remotes/origin/develop" | awk '{ print $2 }')
+  git clean -d -f
+
   git checkout $BRANCH
   git reset --hard $(git BRANCH -av | grep "remotes/origin/$BRANCH" | awk '{ print $2 }')
+  git clean -d -f
   git BRANCH -avv
 }
 
@@ -173,11 +172,11 @@ function init {
   if [[ -z "$TARGET_DIR" ]]; then
     TARGET_DIR=$(pwd)
   elif ! [ -e "$TARGET_DIR" ]; then
-    echo "Creating new directory: $TARGET_DIR"
-    mkdir $TARGET_DIR
+    echo "No such dir: $TARGET_DIR"
+    exit 1
   fi
 
-  echo "All Cytoscape subprojects will be cloned into: ${TARGET_DIR}"
+  echo "Cytoscape project will be cloned to: ${TARGET_DIR}"
 
   cd $TARGET_DIR || { echo Could not find target directory: $TARGET_DIR; exit 1; }
 
@@ -218,7 +217,7 @@ START_DIR=$(pwd)
 
 case $COMMAND in
   init )    init ;;
-  reset )   reset ;;
+  reset )    reset ;;
   push )    push ;;
   pull )    pull ;;
   switch )  switch ;;
