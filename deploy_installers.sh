@@ -11,6 +11,9 @@
 #
 ################################################################################
 
+# Server name to be used for hosting installers.
+REMOTE_SERVER="chenel"
+
 CMDNAME=$(basename $0)
 ERROR_MESSAGE="Usage: $CMDNAME [-a] [-u] branch_name"
 
@@ -81,10 +84,10 @@ cd ./target/install4j
 echo "Uploading new installers..."
 deployDir="build-$(date "+%Y-%m-%d-%H-%M-%S-%Z")"
 
-server="grenache:~/public_html/data/cy3latest/$deployDir/"
+server="$REMOTE_SERVER:~/public_html/data/cy3latest/$deployDir/"
 
 # Create directory
-ssh grenache mkdir /cellar/users/kono/public_html/data/cy3latest/$deployDir
+ssh $REMOTE_SERVER mkdir /cellar/users/kono/public_html/data/cy3latest/$deployDir
 
 scp ./signed/* $server || { echo Abort: Could not upload signed file.; exit 1; }
 scp ./*.exe $server || { echo Abort: Could not upload Windows installers.; exit 1; }
