@@ -1,13 +1,14 @@
 #!/usr/local/bin/python
 # Hotfix release
 # Release script for Hotfixes.
+
 import sys
 import argparse
 import subprocess
 import os
 
 
-targets = ("api", "impl", "support", "gui-distribution", "app-developer")
+targets = ('api', 'impl', 'support', 'gui-distribution', 'app-developer')
 
 def refresh():
     for target in targets:

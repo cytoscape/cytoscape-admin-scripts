@@ -1,14 +1,14 @@
 #!/bin/sh
 #
-#
 # Create release branches from develop
 # 
 #  1. TAG the project to the target version.
 #  2. Start Release branch
 #  3. Push changes to the upstream.
 # 
-#  by Keiichiro Ono
+#  by Keiichiro Ono (UC, San Diego)
 #
+###############################################################################
 
 ##### Target Repositories #####
 REPOSITORIES=(parent api support impl gui-distribution app-developer)
@@ -29,6 +29,7 @@ function resetAll {
 }
 
 
+###### Main #####
 while getopts 'c:' OPT
 do
 	case $OPT in
@@ -39,6 +40,7 @@ do
 				exit 1 ;;
 	esac
 done
+
 
 #######################################
 # Reset everything                    #
