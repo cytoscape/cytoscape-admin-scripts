@@ -14,6 +14,9 @@
 # Server name to be used for hosting installers.
 REMOTE_SERVER="chenel"
 
+# Change this to your account
+USER_NAME="kono"
+
 CMDNAME=$(basename $0)
 ERROR_MESSAGE="Usage: $CMDNAME [-a] [-u] branch_name"
 
@@ -87,7 +90,7 @@ deployDir="build-$(date "+%Y-%m-%d-%H-%M-%S-%Z")"
 server="$REMOTE_SERVER:~/public_html/data/cy3latest/$deployDir/"
 
 # Create directory
-ssh $REMOTE_SERVER mkdir /cellar/users/kono/public_html/data/cy3latest/$deployDir
+ssh $REMOTE_SERVER mkdir /cellar/users/$USER/public_html/data/cy3latest/$deployDir
 
 scp ./signed/* $server || { echo Abort: Could not upload signed file.; exit 1; }
 scp ./*.exe $server || { echo Abort: Could not upload Windows installers.; exit 1; }
@@ -104,6 +107,6 @@ if [ "$FLG_A" ]; then
 	scp -r ./API $server || { echo Abort: Could not upload JavaDoc files.; exit 1; }
 fi
 
-deployURL="http://chianti.ucsd.edu/~kono/data/cy3latest/$deployDir"
+deployURL="http://chianti.ucsd.edu/~$USER_NAME/data/cy3latest/$deployDir"
 echo "Finished.  Visit $deployURL"
 open $deployURL
