@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# @(#) cy version 1.2 2/19/2014
+# @(#) cy version 2.0.0 9/15/2015
 #
 #  USAGE:
 #    init
@@ -28,10 +28,17 @@ HELP='Cytoscape repository management tool'
 
 # Git base URL
 BASE_URL='git@github.com:cytoscape/cytoscape-'
+
+# Core Apps URL
+APP_URL='git@github.com:cytoscape/'
+
 NON_CORE_URL='git://github.com/cytoscape/cytoscape-'
 
 # Cytoscape repository names
 REPOSITORIES=(. parent api impl support gui-distribution app-developer)
+
+# List of Core Apps
+CORE_APPS=(biopax command-dialog datasource-biogrid network-analyzer network-merge psi-mi sbml welcome webservice-psicquic-client webservice-biomart-client)
 
 
 #######################################
@@ -207,6 +214,17 @@ function init {
 }
 
 
+function apps {
+  mkdir ./apps
+  cd apps
+
+  for app in "${CORE_APPS[@]}"; do
+    echo "\n - Cloning $app"
+    REPO_URL="$APP_URL$app.git"
+    git clone $REPO_URL || { echo Could not clone remote repository: $REPO_URL; exit 1; }
+  done
+  cd ..
+}
 
 ###############################################################################
 # Main workflow
@@ -222,6 +240,7 @@ case $COMMAND in
   pull )    pull ;;
   switch )  switch ;;
   status )  status ;;
+  apps )    apps ;;
 
   * )      echo "Invalid command $COMMAND: $ERROR_MESSAGE"
           exit 1;;
