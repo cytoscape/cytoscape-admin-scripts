@@ -1,14 +1,15 @@
 #!/bin/sh
 #
-# @(#) cy version 1.2 9/11/2013
+# @(#) cy version 2.0.0 9/15/2015
 #
 #  USAGE:
 #    init
 #
 # DESCRIPTION:
 #   Cytoscape 3 repository management utility.
+#   This script is only for core developers.
 #
-# Requirements:
+# Reqiirments:
 #   - git
 #   - git-flow
 #
@@ -27,10 +28,17 @@ HELP='Cytoscape repository management tool'
 
 # Git base URL
 BASE_URL='git@github.com:cytoscape/cytoscape-'
-NON_CORE_URL='https://github.com/cytoscape/cytoscape-'
+
+# Core Apps URL
+APP_URL='git@github.com:cytoscape/'
+
+NON_CORE_URL='git://github.com/cytoscape/cytoscape-'
 
 # Cytoscape repository names
-REPOSITORIES=(. parent api impl support headless-distribution gui-distribution app-developer)
+REPOSITORIES=(. parent api impl support gui-distribution app-developer)
+
+# List of Core Apps
+CORE_APPS=(biopax command-dialog datasource-biogrid network-analyzer network-merge psi-mi sbml welcome webservice-psicquic-client webservice-biomart-client)
 
 
 #######################################
@@ -40,8 +48,7 @@ while getopts 'hrd:' OPT
 do
   case $OPT in
     r)  FLG_R=1
-        BASE_URL=$NON_CORE_URL
-        echo " - Using read-only repository: " + $BASE_URL
+        echo " - Using read-only repository."
         ;;
     h)  FLG_H=1
         echo "$HELP: $ERROR_MESSAGE"
@@ -64,7 +71,7 @@ fi
 
 
 ###############################################################################
-# Functions
+# Functrions
 ###############################################################################
 
 function reset {
@@ -74,7 +81,7 @@ function reset {
   for REPO in "${REPOSITORIES[@]}"; do
     echo "\n - Resetting local changes: $REPO"
     pushd $REPO
-    git clean -f
+    git clean -f -d
     git reset --hard
     popd ..
   done
@@ -131,10 +138,15 @@ function switch {
 function resetAll {
   git checkout master
   git reset --hard $(git BRANCH -av | grep "remotes/origin/master" | awk '{ print $2 }')
+  git clean -d -f
+
   git checkout develop
   git reset --hard $(git BRANCH -av | grep "remotes/origin/develop" | awk '{ print $2 }')
+  git clean -d -f
+
   git checkout $BRANCH
   git reset --hard $(git BRANCH -av | grep "remotes/origin/$BRANCH" | awk '{ print $2 }')
+  git clean -d -f
   git BRANCH -avv
 }
 
@@ -167,11 +179,11 @@ function init {
   if [[ -z "$TARGET_DIR" ]]; then
     TARGET_DIR=$(pwd)
   elif ! [ -e "$TARGET_DIR" ]; then
-    echo "Creating new directory: $TARGET_DIR"
-    mkdir $TARGET_DIR
+    echo "No such dir: $TARGET_DIR"
+    exit 1
   fi
 
-  echo "Cytoscape project will be cloned into: ${TARGET_DIR}"
+  echo "Cytoscape project will be cloned to: ${TARGET_DIR}"
 
   cd $TARGET_DIR || { echo Could not find target directory: $TARGET_DIR; exit 1; }
 
@@ -202,6 +214,17 @@ function init {
 }
 
 
+function apps {
+  mkdir ./apps
+  cd apps
+
+  for app in "${CORE_APPS[@]}"; do
+    echo "\n - Cloning $app"
+    REPO_URL="$APP_URL$app.git"
+    git clone $REPO_URL || { echo Could not clone remote repository: $REPO_URL; exit 1; }
+  done
+  cd ..
+}
 
 ###############################################################################
 # Main workflow
@@ -217,6 +240,7 @@ case $COMMAND in
   pull )    pull ;;
   switch )  switch ;;
   status )  status ;;
+  apps )    apps ;;
 
   * )      echo "Invalid command $COMMAND: $ERROR_MESSAGE"
           exit 1;;
