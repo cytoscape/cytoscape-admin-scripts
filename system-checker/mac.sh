@@ -86,7 +86,7 @@ if [[ $JAVA_HOME != "" ]]; then
 else
     echo "JAVA_HOME is not set."
     echo "Please add the following to your .${shell}rc file:"
-    echo "export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_*.jdk"
+    echo "export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_*.jdk/Contents/Home"
     echo "where * is the latest Java 8 update number."
     echo "And then type 'source ~/.${shell}rc'"
     exit 1
@@ -105,6 +105,7 @@ if [[ $num_success -eq $NUM_TRY ]]; then
     echo "Done!  You are ready to run Cytoscape $CYTOSCAPE_VERSION"
 else
     echo "Looks connection to App Store is unstable."
+    echo "Please check firewall setting from System Preference."
     echo "traceroute result:"
     traceroute apps.cytoscape.org
     exit 1
