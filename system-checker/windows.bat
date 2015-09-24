@@ -10,6 +10,9 @@ REM Minimal Java version
 set MIN_JAVA_VERSION=18000
 set MIN_JAVA_VERSION_STR=8.0
 
+REM Recommended link to download Java 
+set JAVA_DOWNLOAD=http://java.com/en/download/manual.jsp
+
 REM Error checking flags
 set pass=true
 set sys64bit_pass=true
@@ -42,7 +45,6 @@ java -help >nul 2>&1
 if %errorlevel% NEQ 0 (
     set pass=false
     echo Problem: Java not installed.
-    echo Please install Java and re-run this script again.
     echo.
     set javaversion_pass=false
     goto appcheck
@@ -54,13 +56,12 @@ if %errorlevel% NEQ 0 (
 
 REM Test for 64 bit
 REM ---------------
-if %PROCESSOR_ARCHITECTURE%==x86 (
-    set pass=false
+if %PROCESSOR_ARCHITECTURE% == x86 (
     set sys64bit_pass=false
-    echo Problem: Your system is 32 bit: %PROCESSOR_ARCHITECTURE%
+    echo Your system is 32 bit: %PROCESSOR_ARCHITECTURE%
     echo.
 ) else (
-    echo Your system is 64 bit as required
+    echo Your system is 64 bit
     echo.
 )
 
@@ -92,11 +93,14 @@ REM Test if Java 64 bit
 REM -------------------
 java -d64 -version >nul 2>&1
 if %errorlevel% NEQ 0 (
-    set java64bit_pass=false REM not used
-    echo Java is 32 bit
+    set java64bit_pass=false
+    if %sys64bit_pass% == true (
+        set pass=false
+    )
+    echo Your Java is 32 bit
     echo.
 ) else (
-    echo Java is 64 bit
+    echo Your Java is 64 bit as recommended
     echo.
 )
 
@@ -125,14 +129,17 @@ echo.
 if %pass% == true (
     echo Success! You are ready to run Cytoscape %CYTOSCAPE_VERSION%
 ) else (
-    echo Your system still has some issues.
+    echo Your system has some issues.
     echo Please fix those and re-run this script again:
-    if %sys64bit_pass% NEQ true (
-        echo %sys64bit_pass%
-        echo - Your system is not 64 bit
+    if %sys64bit_pass% == true (
+        if %java64bit_pass% NEQ true (
+            echo - Your system is 64 bit but your Java is only 32 bit
+            echo - Link to download 64 bit Java: %JAVA_DOWNLOAD%
+        )
     )
     if %javaversion_pass% NEQ true (
         echo - You need at least Java version %MIN_JAVA_VERSION_STR%
+        echo - Link to download Java: %JAVA_DOWNLOAD%
     )
     if %appstore_pass% NEQ true (
         echo - App store at %APP_STORE_URL% is not reachable
