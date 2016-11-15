@@ -3,7 +3,7 @@
 #
 # SCRIPT: release.sh
 #
-# DESCRIPTION: 
+# DESCRIPTION:
 #    Cytoscape Release Script:
 #
 #    Create a new release from hotfix branch.
@@ -109,7 +109,7 @@ function prepare {
 	echo "\n\n - Checking out branch: $branch"
 	git checkout $branch
 
-	# Get chenges from remote. 
+	# Get chenges from remote.
 	echo "\n\n - Pulling changes from github remote repository:\n\n$(git remote -v)\n\n"
 	git pull || { echo Could not pull the changes from remote; exit 1; }
 
@@ -165,7 +165,7 @@ function updateProperties {
 function updateFeatures {
 	cd features/src/main/resources
 	sed -E -e "s/-SNAPSHOT//g" features.xml > features.updated.xml
-	
+
 	echo "\n\n - Here is the changes:\n\n"
 	mv features.updated.xml features.xml
 	cd -
