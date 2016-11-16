@@ -53,19 +53,22 @@ declare -A app_versions
 for app in "${CORE_APPS[@]}"; do
   cd $app
   echo "- Switching to ${BRANCH}: $app"
-  git checkout -b $BRANCH || { echo Could not checkout branch $BRANCH; }
-	sed -E -e "s/-SNAPSHOT<\/version>/<\/version>/g" pom.xml > pom.updated.xml
-	mv pom.updated.xml pom.xml
-  # mvn clean install || { echo Failed to build new version: $app; }
-  res=$(printf 'VERSION=${project.version}\n0\n'\
+  git checkout -b $BRANCH || { echo Could not checkout branch $BRANCH; exit 1;}
+
+	# sed -E -e "s/-SNAPSHOT<\/version>/<\/version>/g" pom.xml > pom.updated.xml
+	# mv pom.updated.xml pom.xml
+
+  original_version=$(printf 'VERSION=${project.version}\n0\n'\
    | mvn org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate \
    | grep '^VERSION' \
    | sed -E -e "s/VERSION=//g")
 
+  res=$(echo ${original_version} | sed -E -e "s/-SNAPSHOT//g")
   app_versions["${app}"]=$res
   echo "$app,$res" >> ../versions.txt
 
   # This is for updating children
+  mvn versions:set -DnewVersion=${res}
   mvn versions:update-child-modules
   mvn versions:commit
   mvn clean install || { echo Failed to build $app; exit 1;}
