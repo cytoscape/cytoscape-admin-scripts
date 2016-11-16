@@ -9,7 +9,7 @@
 #    - python 3.x
 #    - install4j v6 (for the last step)
 #
-# by Keiichiro Ono
+# by Keiichiro Ono (11/16/2016)
 #
 ################################################################################
 

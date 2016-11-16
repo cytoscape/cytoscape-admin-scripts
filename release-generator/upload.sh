@@ -1,5 +1,12 @@
 #!/bin/sh
 
+################################################################################
+#
+# Script to upload installers to UCSD server
+#
+################################################################################
+
+
 # Server name to be used for hosting installers.
 REMOTE_SERVER="chenel.ucsd.edu"
 
