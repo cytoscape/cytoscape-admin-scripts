@@ -22,6 +22,9 @@ CURRENT="3.5.0-SNAPSHOT"
 # New release version (for the core, not core apps!)
 TARGET="3.5.0-RC1"
 
+# Skip the checkout process
+CHECKOUT=true
+
 # List of all core modules
 REPOSITORIES=(parent api support impl gui-distribution app-developer)
 
@@ -30,20 +33,28 @@ CORE_APPS=(biopax command-dialog core-apps-meta cyREST datasource-biogrid \
 json idmapper network-analyzer network-merge opencl-cycl opencl-layout \
 psi-mi sbml welcome webservice-psicquic-client webservice-biomart-client)
 
-# List of files to be updated in this release process
+function checkout {
+  git clone git@github.com:cytoscape/cytoscape.git
+  mv ./cytoscape ./cy-release-work-dir
+  cd ./cy-release-work-dir
+
+  # Clone repos
+  ./cy.sh init
+  ./cy.sh apps
+}
+
+
+################################################################################
+
+# Record the starting point
 original_dir=`pwd`
-
-# Get the top-level dir
-git clone git@github.com:cytoscape/cytoscape.git
-mv ./cytoscape ./cy-release-work-dir
-cd ./cy-release-work-dir
-
-# Clone repos
-./cy.sh init
-./cy.sh apps
+if [[ $CHECKOUT == true ]]; then
+  checkout
+else
+  cd ./cy-release-work-dir
+fi
 
 ########## Prepare new core apps ##########
-
 # Create branch for apps
 cd ./apps
 last_dir=`pwd`
@@ -76,6 +87,7 @@ for app in "${CORE_APPS[@]}"; do
   # Now commit the change to local repo.
   git add -A
   git commit -m "Version number updated to ${res} for Cytoscape release ${TARGET}."
+  git tag ${res}
   cd ..
 done
 

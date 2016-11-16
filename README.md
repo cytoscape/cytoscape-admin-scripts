@@ -1,12 +1,12 @@
 # cytoscape-scripts
-> Utility Scripts for Cytoscape Core Developers
 
-## History
+## News
 - 11/15/2016 Updated for Cytoscape 3.5.0 release.
 - 10/10/2014 Version 1.3.0 - Updated for Cytoscape 3.2.0 release.
 - 9/11/2013 Version 1.2.0 - This version supports read-only repository for non-core developers.
 
 ## Introduction
+This repository contains collection of scripts to help building Cytoscape core and helping users to check their environment.
 
 * ```/release-generator```
   - This directory is for scripts to generate new Cytoscape release.
