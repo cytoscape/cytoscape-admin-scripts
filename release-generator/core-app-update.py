@@ -2,6 +2,11 @@ from bs4 import BeautifulStoneSoup
 import re
 import csv
 
+import sys, getopt
+
+args = sys.argv
+build_dir = args[1]
+
 def replaceVer(node):
     exe = node.executions.find_all('execution')
     for e in exe:
@@ -15,7 +20,7 @@ def replaceVer(node):
                 item.version.string.replace_with(ver_map[app_name])
 
 # Read versions from output of shell script
-VER_FILE = './cy-release-work-dir/apps/versions.txt'
+VER_FILE = './' + build_dir + '/apps/versions.txt'
 ver_map = {}
 
 with open(VER_FILE, 'r') as f:
@@ -25,7 +30,7 @@ with open(VER_FILE, 'r') as f:
 
 print(ver_map)
 
-XMLFILE = './cy-release-work-dir/cytoscape/gui-distribution/assembly/pom.xml'
+XMLFILE = './' + build_dir + '/cytoscape/gui-distribution/assembly/pom.xml'
 
 f = open(XMLFILE, 'r')
 soup = BeautifulStoneSoup(f.read())

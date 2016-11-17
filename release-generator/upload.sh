@@ -6,6 +6,7 @@
 #
 ################################################################################
 
+BUILD_DIR=$1
 
 # Server name to be used for hosting installers.
 REMOTE_SERVER="chenel.ucsd.edu"
@@ -13,7 +14,8 @@ REMOTE_SERVER="chenel.ucsd.edu"
 # Change this to your account
 USER_NAME="kono"
 
-cd ./cy-release-work-dir/cytoscape/gui-distribution/packaging
+cd ./${BUILD_DIR}/cytoscape/gui-distribution/packaging
+
 # mvn clean install || { echo Abort: Installer Build Failed; exit 1; }
 # ./sign-dmg.sh 'Developer ID Application' || { echo Abort: Could not sign DMG for Mac.; exit 1; }
 

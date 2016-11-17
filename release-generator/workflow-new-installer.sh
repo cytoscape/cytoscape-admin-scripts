@@ -6,12 +6,10 @@ BUILD_DIR="build"
 BRANCH="release/3.5.0"
 
 # Current development version
-CURRENT="3.5.0-SNAPSHOT"
+CURRENT="3.5.0-RC1"
 
 # New release version (for the core, not core apps!)
-TARGET="3.5.0-RC1"
+TARGET="3.5.0-RC2"
 
 
-# ./prepare.sh $BUILD_DIR
-# ./create-apps.sh $BRANCH $TARGET $BUILD_DIR
 ./create-installers.sh $BRANCH $TARGET $BUILD_DIR $CURRENT

@@ -35,5 +35,3 @@ nosetests.xml
 .pydevproject
 
 .DS_Store
-
-cy-release-work-dir/
