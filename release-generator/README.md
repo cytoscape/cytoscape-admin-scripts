@@ -36,7 +36,7 @@ You have already created release branch before and have RC1 installers.  Now you
 
 1. ```cd``` to your temp workspace (can be any of your local writable directory)
 1. Run ```git clone https://github.com/cytoscape/cytoscape-scripts.git```
-1. ```cd cytoscape-scripts```
+1. ```cd cytoscape-scripts/release-generator/create_next_rc```
 1. Open ```workflow-create-next-rc.sh``` with your text editor
 1. Edit version numbers.  For example, if you want to create Cytoscape 3.5.0 RC2 from RC1, the parameters are:
   * BRANCH="release/3.5.0"
