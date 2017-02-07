@@ -1,5 +1,6 @@
 #!/bin/sh
 
+# Temp workspace, containing all Cytoscape code
 BUILD_DIR="build"
 
 # New branch for release
@@ -12,6 +13,7 @@ CURRENT="3.5.0-SNAPSHOT"
 TARGET="3.5.0-RC1"
 
 
-# ./prepare.sh $BUILD_DIR
-# ./create-apps.sh $BRANCH $TARGET $BUILD_DIR
+# Clone remote repository and start from scratch.
+./prepare.sh $BUILD_DIR
+./create-apps.sh $BRANCH $TARGET $BUILD_DIR
 ./create-installers.sh $BRANCH $TARGET $BUILD_DIR $CURRENT

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Script for building all core apps
+
 # List of all core
 CORE_APPS=(biopax command-dialog core-apps-meta cyREST datasource-biogrid \
 json idmapper network-analyzer network-merge opencl-cycl opencl-layout \
