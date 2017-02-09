@@ -10,6 +10,7 @@ psi-mi sbml welcome webservice-psicquic-client webservice-biomart-client)
 
 BRANCH=$1
 BUILD_DIR=$2
+TAG=$3
 
 # Record the starting point
 original_dir=`pwd`

@@ -49,4 +49,17 @@ You have already created release branch before and have RC1 installers.  Now you
 Now you have installers for all platforms in _build/cytoscape/gui-distribution/packaging/target/install4j_.  *Don't forget to sign DMG for Mac.*
 
 ## 3. Creating final release and merge back to master
-(TBD)
+
+This is the final step for the actual release and requires some Git branch management.
+
+### Your Situation
+You have Cytoscape 3.x RCn and want to create final release of 3.x
+
+### Goal of this task
+You have RC n installers.  Now you need to create final release for the Cytoscape 3.x.  In this case, you need to merge all changes to *master*.
+
+#### Assumptions
+* Current version: 3.x RCn
+* Target version: 3.x
+* Current 3.x RCn was created from the _release/3.x_ release branch
+* Release branch contains everything you need to create final release.

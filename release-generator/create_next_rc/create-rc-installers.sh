@@ -6,6 +6,8 @@ TARGET=$2
 BUILD_DIR=$3
 CURRENT=$4
 
+REPOSITORIES=(parent api impl support gui-distribution app-developer)
+
 echo "Switching branch..."
 cd ./${BUILD_DIR}/cytoscape
 ./cy.sh switch $BRANCH || { echo Failed to switch to $BRANCH; exit 1;}

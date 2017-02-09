@@ -15,5 +15,5 @@ TARGET="3.5.0-RC2"
 
 
 ./prepare.sh $BUILD_DIR
-./build-apps.sh $BRANCH $BUILD_DIR
+./build-apps.sh $BRANCH $BUILD_DIR $TARGET
 ./create-rc-installers.sh $BRANCH $TARGET $BUILD_DIR $CURRENT
