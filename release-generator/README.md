@@ -63,3 +63,33 @@ You have RC n installers.  Now you need to create final release for the Cytoscap
 * Target version: 3.x
 * Current 3.x RCn was created from the _release/3.x_ release branch
 * Release branch contains everything you need to create final release.
+
+### Step-by-Step Instruction
+
+#### Automated Part
+1. If you don't have _cytoscape-scripts_ repository in your local system, follow these steps.  Otherwise, skip to step 2.
+  * ```cd``` to your temp workspace (can be any of your local writable directory)
+  * Run ```git clone https://github.com/cytoscape/cytoscape-scripts.git```
+1. ```cd cytoscape-scripts/release-generator/create-final-release```
+1. Open ```workflow-create-final-release.sh``` with your text editor
+1. Edit version numbers.  For example, if you want to create Cytoscape 3.5.0 from RC2, the parameters are:
+  * BRANCH="release/3.5.0"
+  * CURRENT="3.5.0-RC2"
+  * TARGET="3.5.0"
+1. Save the modified script
+1. Run the release workflow: ```./workflow-create-final-release.sh```
+1. Wait 10~20 minutes
+
+
+#### Manual Tasks
+* Make sure you are on the ***master*** branch
+* Sign the DMG file for Mac
+* Now you are ready to deploy the changes to remote.  For each local repository, run:
+  * ```git push && git push --tags```
+  * ```mvn deploy```
+* Upload all of the core apps to the store and edit descriptions
+* Upload installers to _chianti_
+* Write release notes
+* Update manual
+* Update web site
+* Done!
