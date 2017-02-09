@@ -50,6 +50,8 @@ Now you have installers for all platforms in _build/cytoscape/gui-distribution/p
 
 ## 3. Creating final release and merge back to master
 
+![](images/final-release.jpg)
+
 This is the final step for the actual release and requires some Git branch management.
 
 ### Your Situation
