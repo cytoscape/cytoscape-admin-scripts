@@ -30,6 +30,7 @@ for app in "${CORE_APPS[@]}"; do
   git pull origin $BRANCH
 
   mvn clean install || { echo Failed to build $app; exit 1;}
+  git tag $TAG
   cd ..
 done
 
