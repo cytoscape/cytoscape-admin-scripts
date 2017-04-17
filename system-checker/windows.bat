@@ -1,7 +1,7 @@
 @echo off
 
 REM Target Cytoscape version for this script
-set CYTOSCAPE_VERSION=3.3.0
+set CYTOSCAPE_VERSION=3.5.0
 
 REM Cytoscpae App Store location
 set APP_STORE_URL=apps.cytoscape.org
