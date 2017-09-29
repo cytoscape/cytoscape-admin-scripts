@@ -9,6 +9,8 @@ set APP_STORE_URL=apps.cytoscape.org
 REM Minimal Java version
 set MIN_JAVA_VERSION=18000
 set MIN_JAVA_VERSION_STR=8.0
+set MAX_JAVA_VERSION=18999
+set BEYOND_JAVA_VERSION_STR=9.0
 
 REM Recommended link to download Java 
 set JAVA_DOWNLOAD=http://java.com/en/download/manual.jsp
@@ -82,10 +84,19 @@ for /f tokens^=2-5^ delims^=.-_^" %%j in ('java -fullversion 2^>^&1') do set "jv
 if %jver% LSS %MIN_JAVA_VERSION% (
     set pass=false
     set javaversion_pass=false
-    echo Problem: Your Java version is less than 8.0
+    echo Problem: Your Java version is less than %MIN_JAVA_VERSION_STR%
     echo.
 ) else (
     echo Your Java version is at least %MIN_JAVA_VERSION_STR% as required
+    echo.
+)
+if %jver% GTR %MAX_JAVA_VERSION% (
+    set pass=false
+    set javaversion_pass=false
+    echo Problem: Your Java version is %BEYOND_JAVA_VERSION_STR% or later
+    echo.
+) else (
+    echo Your Java version is at least %MIN_JAVA_VERSION_STR% and less than %BEYOND_JAVA_VERSION_STR% as required
     echo.
 )
 
