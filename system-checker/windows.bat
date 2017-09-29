@@ -7,8 +7,10 @@ REM Cytoscpae App Store location
 set APP_STORE_URL=apps.cytoscape.org
 
 REM Minimal Java version
-set MIN_JAVA_VERSION=18000
-set MIN_JAVA_VERSION_STR=8.0
+set MIN_JAVA_VERSION=8
+set MIN_JAVA_VERSION_STR=8
+set MAX_JAVA_VERSION=8
+set MAX_JAVA_VERSION_STR=8
 
 REM Recommended link to download Java 
 set JAVA_DOWNLOAD=http://java.com/en/download/manual.jsp
@@ -79,13 +81,23 @@ if "%JAVA_HOME%" == "" (
 REM Test for Java version
 REM ---------------------
 for /f tokens^=2-5^ delims^=.-_^" %%j in ('java -fullversion 2^>^&1') do set "jver=%%j%%k%%l%%m"
-if %jver% LSS %MIN_JAVA_VERSION% (
+set jmajorver=%jver:~1,1%
+if %jmajorver% LSS %MIN_JAVA_VERSION% (
     set pass=false
     set javaversion_pass=false
-    echo Problem: Your Java version is less than %MIN_JAVA_VERSION_STR%
+    echo Problem: Your Java version is less than version %MIN_JAVA_VERSION_STR%
     echo.
 ) else (
-    echo Your Java version is at least %MIN_JAVA_VERSION_STR% as required
+    echo Your Java version is at least version %MIN_JAVA_VERSION_STR% as required
+    echo.
+)
+if %jmajorver% GTR %MAX_JAVA_VERSION% (
+    set pass=false
+    set javaversion_pass=false
+    echo Problem: Your Java version is greater than version %MAX_JAVA_VERSION_STR%
+    echo.
+) else (
+    echo Your Java version is no higher than version %MAX_JAVA_VERSION_STR% as required
     echo.
 )
 
@@ -139,7 +151,7 @@ if %pass% == true (
         )
     )
     if %javaversion_pass% NEQ true (
-        echo - You need at least Java version %MIN_JAVA_VERSION_STR%
+        echo - You need at least Java version %MIN_JAVA_VERSION_STR%, but not greater than Java version %MAX_JAVA_VERSION_STR%
         echo - Link to download Java: %JAVA_DOWNLOAD%
     )
     if %appstore_pass% NEQ true (
