@@ -78,10 +78,14 @@ if "%JAVA_HOME%" == "" (
     echo.
 )
 
-REM Test for Java version
-REM ---------------------
-for /f tokens^=2-5^ delims^=.-_^" %%j in ('java -fullversion 2^>^&1') do set "jver=%%j%%k%%l%%m"
-set jmajorver=%jver:~1,1%
+REM Test for Java version ... could look like 1.8.0_181 or 9+142
+REM ------------------------------------------------------------
+for /f tokens^=2-5^ delims^=.-_+^" %%j in ('java -fullversion 2^>^&1') do set "jver=%%j%%k%%l%%m"
+set jmajorver=%jver:~0,1%
+if "%jmajorver%" EQU "1" (
+	set jmajorver=%jver:~1,1%
+)
+
 if %jmajorver% LSS %MIN_JAVA_VERSION% (
     set pass=false
     set javaversion_pass=false
