@@ -1,5 +1,7 @@
 @echo off
 
+REM This is a handy reference for this scripting language: https://technet.microsoft.com/en-us/library/cc754335(v=ws.11).aspx
+
 REM Target Cytoscape version for this script
 set CYTOSCAPE_VERSION=3.5.0
 
