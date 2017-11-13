@@ -4,7 +4,7 @@
 ####################################
 
 # Target Cytoscape version for this script
-CYTOSCAPE_VERSION="3.5.0"
+CYTOSCAPE_VERSION="3.6.0"
 
 # Cytoscpae App Store location
 APP_STORE_URL="apps.cytoscape.org"
@@ -13,9 +13,9 @@ APP_STORE_URL="apps.cytoscape.org"
 SUPPORTED_DISTRIBUTIONS=("ubuntu" "centos" "fedora")
 
 # Supported versions for each platform
-UBUNTU_VERSIONS=("12.04" "14.04" "14.10" "15.04")
+UBUNTU_VERSIONS=("14.04" "14.10" "15.04" "15.10" "16.04" "16.10" "17 04" "17 10")
 CENTOS_VERSIONS=("6" "7")
-FEDORA_VERSIONS=("20" "21" "22")
+FEDORA_VERSIONS=("24" "25" "26")
 
 # Supported Java verisons
 SUPPORTED_JAVA_VERSIONS=("1.8.0")
