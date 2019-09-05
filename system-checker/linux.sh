@@ -4,7 +4,7 @@
 ####################################
 
 # Target Cytoscape version for this script
-CYTOSCAPE_VERSION="3.7.1"
+CYTOSCAPE_VERSION="3.7.2"
 
 # Cytoscpae App Store location
 APP_STORE_URL="apps.cytoscape.org"
@@ -145,18 +145,18 @@ echo -e " - Checking connection to Cytoscape App Store...\n"
 
 ping_pass=true
 host $APP_STORE_URL || echo -e "\e[31mError: Could not resolve $APP_STORE_URL\e[m\n"; ping_pass=false
- 
+
 if [[ $ping_pass ]];then
     ping_result=$(ping -c $NUM_TRY -t 15 $APP_STORE_URL | grep loss)
     num_success=$(echo $ping_result | awk '{print $4}')
-    
+
     echo -e "\n\e[36m - Result: $ping_result\e[m"
-    
+
     if [[ $num_success -eq $NUM_TRY ]]; then
         echo -e "\e[36m - Success!"
     else
         echo -e "\e[31mError: Seems connection to App Store is unstable.\e[m\n"
-        echo "traceroute result:"    
+        echo "traceroute result:"
         traceroute $APP_STORE_URL || echo -e "\n\e[31mError: Please install traceroute command.\e[m\n"
     fi
 else

@@ -3,7 +3,7 @@
 REM This is a handy reference for this scripting language: https://technet.microsoft.com/en-us/library/cc754335(v=ws.11).aspx
 
 REM Target Cytoscape version for this script
-set CYTOSCAPE_VERSION=3.7.1
+set CYTOSCAPE_VERSION=3.7.2
 
 REM Cytoscpae App Store location
 set APP_STORE_URL=apps.cytoscape.org
@@ -14,7 +14,7 @@ set MIN_JAVA_VERSION_STR=8
 set MAX_JAVA_VERSION=8
 set MAX_JAVA_VERSION_STR=8
 
-REM Recommended link to download Java 
+REM Recommended link to download Java
 set JAVA_DOWNLOAD=http://java.com/en/download/manual.jsp
 
 REM Error checking flags

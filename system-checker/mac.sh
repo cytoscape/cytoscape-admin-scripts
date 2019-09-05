@@ -5,7 +5,7 @@
 ####################################
 
 # Target Cytoscape version for this script
-CYTOSCAPE_VERSION="3.7.1"
+CYTOSCAPE_VERSION="3.7.2"
 
 # Supported Mac OS versions
 SUPPORTED_OS_VERSIONS=("10.11" "10.12" "10.13" "10.14")
