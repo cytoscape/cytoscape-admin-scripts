@@ -5,13 +5,13 @@
 ####################################
 
 # Target Cytoscape version for this script
-CYTOSCAPE_VERSION="3.7.2"
+CYTOSCAPE_VERSION="3.8.0"
 
 # Supported Mac OS versions
-SUPPORTED_OS_VERSIONS=("10.11" "10.12" "10.13" "10.14")
+SUPPORTED_OS_VERSIONS=("10.11" "10.12" "10.13" "10.14" "10.15")
 
 # Supported Java verisons
-SUPPORTED_JAVA_VERSIONS=("1.8.0")
+SUPPORTED_JAVA_VERSIONS=("11")
 
 # Default location for Oracle JDK.
 ORACLE_VM_LOCATION="/Library/Java/JavaVirtualMachines"
@@ -52,7 +52,7 @@ fi
 # Check Java Version
 
 # Test 1: Check Oracle Java Machine
-jvms=$(find $ORACLE_VM_LOCATION -name jdk1.8.0* -type d)
+jvms=$(find $ORACLE_VM_LOCATION -name jdk-11.0* -type d)
 jvm_test=$(echo $jvms | awk '{if(NF>=1){print 1}else{print 0}}')
 
 if [[ $jvm_test -eq 1 ]]; then
@@ -62,21 +62,21 @@ if [[ $jvm_test -eq 1 ]]; then
 else
     echo "- Fail: No Oracle JDK found.  Please download and install Oracle JDK:"
     echo "http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html"
-    exit 1
+#    exit 1
 fi
 
 # Test 2: Try java -version command
 java_version_original=$(java -version 2>&1)
 java_version=$(echo $java_version_original | awk 'NR==1{gsub(/"/,""); print $3}')
 
-java_major_version=$(echo $java_version | awk -F'_' '{print $1}')
+java_major_version=$(echo $java_version | awk -F'\.' '{print $1}')
 
 if [[ $java_major_version == ${SUPPORTED_JAVA_VERSIONS[0]} ]]
 then
     echo " - Pass: Current Java Version = $java_version"
 else
     echo "Fail: Java is not reachable."
-    echo "Try re-installing Java 8."
+    echo "Try re-installing Java 11."
     exit 1
 fi
 
@@ -86,28 +86,29 @@ if [[ $JAVA_HOME != "" ]]; then
 else
     echo "JAVA_HOME is not set."
     echo "Please add the following to your .${shell}rc file:"
-    echo "export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_*.jdk/Contents/Home"
-    echo "where * is the latest Java 8 update number."
+    echo "export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-11.0_*.jdk/Contents/Home"
+    echo "where * is the latest Java 11 update number."
     echo "And then type 'source ~/.${shell}rc'"
     exit 1
 fi
 
 # Test 4: Connect to App Store
+
 NUM_TRY=5
 echo "Checking connection to Cytoscape App Store..."
-ping_result=$(ping -c $NUM_TRY -t 15 apps.cytoscape.org | grep loss)
+#ping_result=$(ping -c $NUM_TRY -t 15 apps.cytoscape.org | grep loss)
 
-num_success=$(echo $ping_result | awk '{print $4}')
+#num_success=$(echo $ping_result | awk '{print $4}')
 
-echo $ping_result
+#echo $ping_result
 
-if [[ $num_success -eq $NUM_TRY ]]; then
+APPSTORE=$(curl -I https://apps.cytoscape.org | awk 'NR==1{print $2}')
+
+if [[ $APPSTORE -eq "200" ]]; then
     echo "Done!  You are ready to run Cytoscape $CYTOSCAPE_VERSION"
 else
-    echo "Looks connection to App Store is unstable."
+    echo "https connection to App Store at https://apps.cytoscape.org is not reachable."
     echo "Please check firewall setting from System Preference."
-    echo "traceroute result:"
-    traceroute apps.cytoscape.org
     exit 1
 fi
 
