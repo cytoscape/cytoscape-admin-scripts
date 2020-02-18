@@ -4,7 +4,7 @@
 ####################################
 
 # Target Cytoscape version for this script
-CYTOSCAPE_VERSION="3.7.2"
+CYTOSCAPE_VERSION="3.8.0"
 
 # Cytoscpae App Store location
 APP_STORE_URL="apps.cytoscape.org"
@@ -18,7 +18,7 @@ CENTOS_VERSIONS=("6" "7")
 FEDORA_VERSIONS=("24" "25" "26")
 
 # Supported Java verisons
-SUPPORTED_JAVA_VERSIONS=("1.8.0")
+SUPPORTED_JAVA_VERSIONS=("11")
 
 # Error cheking flag
 pass=true
@@ -108,9 +108,9 @@ fi
 # Test 2: Try java -version command
 echo -e "\n\e[;1m===== Checking Java Version =====\e[m\n"
 
-java_version_original=$(java -version 2>&1 | grep "java version")
+java_version_original=$(java -version 2>&1 | grep "openjdk version")
 java_version=$(echo $java_version_original | awk 'NR==1{gsub(/"/,""); print $3}')
-java_major_version=$(echo $java_version | awk -F'_' '{print $1}')
+java_major_version=$(echo $java_version | awk -F'.' '{print $1}')
 
 if [[ $java_major_version == ${SUPPORTED_JAVA_VERSIONS[0]} ]]
 then
@@ -147,12 +147,11 @@ ping_pass=true
 host $APP_STORE_URL || echo -e "\e[31mError: Could not resolve $APP_STORE_URL\e[m\n"; ping_pass=false
 
 if [[ $ping_pass ]];then
-    ping_result=$(ping -c $NUM_TRY -t 15 $APP_STORE_URL | grep loss)
-    num_success=$(echo $ping_result | awk '{print $4}')
+    curl_result=$(curl -I https://apps.cytoscape.org | awk 'NR==1{print $2}')
+   
+    echo -e "\n\e[36m - Result: $curl_result\e[m"
 
-    echo -e "\n\e[36m - Result: $ping_result\e[m"
-
-    if [[ $num_success -eq $NUM_TRY ]]; then
+    if [[ $curl_result -eq "200" ]]; then
         echo -e "\e[36m - Success!"
     else
         echo -e "\e[31mError: Seems connection to App Store is unstable.\e[m\n"
