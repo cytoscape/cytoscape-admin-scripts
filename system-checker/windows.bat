@@ -3,16 +3,16 @@
 REM This is a handy reference for this scripting language: https://technet.microsoft.com/en-us/library/cc754335(v=ws.11).aspx
 
 REM Target Cytoscape version for this script
-set CYTOSCAPE_VERSION=3.7.2
+set CYTOSCAPE_VERSION=3.8.0
 
 REM Cytoscpae App Store location
 set APP_STORE_URL=apps.cytoscape.org
 
 REM Minimal Java version
-set MIN_JAVA_VERSION=8
-set MIN_JAVA_VERSION_STR=8
-set MAX_JAVA_VERSION=8
-set MAX_JAVA_VERSION_STR=8
+set MIN_JAVA_VERSION=11
+set MIN_JAVA_VERSION_STR=11
+set MAX_JAVA_VERSION=11
+set MAX_JAVA_VERSION_STR=11
 
 REM Recommended link to download Java
 set JAVA_DOWNLOAD=http://java.com/en/download/manual.jsp
@@ -27,7 +27,6 @@ set appstore_pass=true
 
 REM Timeout values
 set TRACERT_TIMEOUT=30000
-set PING_TIMEOUT=30000
 
 echo.
 echo Cytoscape System Requirements Checker for Windows
@@ -82,11 +81,17 @@ if "%JAVA_HOME%" == "" (
 
 REM Test for Java version ... could look like 1.8.0_181 or 9+142
 REM ------------------------------------------------------------
-for /f tokens^=2-5^ delims^=.-_+^" %%j in ('java -fullversion 2^>^&1') do set "jver=%%j%%k%%l%%m"
-set jmajorver=%jver:~0,1%
-if "%jmajorver%" EQU "1" (
-	set jmajorver=%jver:~1,1%
+for /f tokens^=2-5^ delims^=.-_+^" %%j in ('java -fullversion 2^>^&1') do (
+	set jver[0]=%%j
+	set jver[1]=%%k
+	set jver[2]=%%l
+	set jver[3]=%%m
 )
+set jmajorver=%jver[0]%
+if "%jmajorver%" EQU "1" (
+	set jmajorver=%jver[1]%
+)
+echo Your Java Major version is %jmajorver%
 
 if %jmajorver% LSS %MIN_JAVA_VERSION% (
     set pass=false
@@ -107,31 +112,15 @@ if %jmajorver% GTR %MAX_JAVA_VERSION% (
     echo.
 )
 
-
-REM Test if Java 64 bit
-REM -------------------
-java -d64 -version >nul 2>&1
-if %errorlevel% NEQ 0 (
-    set java64bit_pass=false
-    if %sys64bit_pass% == true (
-        set pass=false
-    )
-    echo Your Java is 32 bit
-    echo.
-) else (
-    echo Your Java is 64 bit as recommended
-    echo.
-)
-
 :appcheck
 
 REM Test for "app" store
 REM --------------------
-ping -n 1 -w %PING_TIMEOUT% %APP_STORE_URL% | find "TTL=" >nul
+curl -I %APP_STORE_URL% | find "200 OK" >nul
 if %errorlevel% NEQ 0 (
     set pass=false
     set appstore_pass=false
-    echo Problem: The "app" store at %APP_STORE_URL% is not reachable with a timeout of %PING_TIMEOUT%ms
+    echo Problem: The "app" store at %APP_STORE_URL% is not reachable
     echo.
 ) else (
     echo The "app" store at %APP_STORE_URL% is reachable
