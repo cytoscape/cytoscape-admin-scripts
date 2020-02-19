@@ -130,8 +130,8 @@ if [[ $JAVA_HOME != "" ]]; then
     echo " - Pass: JAVA_HOME found: $JAVA_HOME"
 else
     echo -e "\e[31mError: \$JAVA_HOME is not set.\e[m\n"
-    echo -e "If you don't have Java yet, please download JDK from Oracle web site:\n"
-    echo -e "http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html\n"
+    echo -e "If you don't have Java yet, please download and install a compatible JDK such as AdoptOpenJDK:\n"
+    echo -e "https://adoptopenjdk.net/?variant=openjdk11&jvmVariant=hotspot\n"
     echo -e "\e[31mDon't forget to select correct version.\e[m"
     echo -e "Your machine type is: \e[31m$machine_type\e[m"
     pass=false

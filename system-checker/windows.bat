@@ -15,7 +15,7 @@ set MAX_JAVA_VERSION=11
 set MAX_JAVA_VERSION_STR=11
 
 REM Recommended link to download Java
-set JAVA_DOWNLOAD=http://java.com/en/download/manual.jsp
+set JAVA_DOWNLOAD=https://adoptopenjdk.net/?variant=openjdk11&jvmVariant=hotspot
 
 REM Error checking flags
 set pass=true

@@ -60,8 +60,8 @@ if [[ $jvm_test -eq 1 ]]; then
     echo ""
     echo $jvms | awk '{gsub(/ /, "\n", $0);print}'
 else
-    echo "- Fail: No Oracle JDK found.  Please download and install Oracle JDK:"
-    echo "http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html"
+    echo "- Fail: No JDK found.  Please download and install a compatible JDK, such as AdoptOpenJDK:"
+    echo "https://adoptopenjdk.net/?variant=openjdk11&jvmVariant=hotspot"
 #    exit 1
 fi
 
