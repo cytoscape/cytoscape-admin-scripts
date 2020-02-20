@@ -14,8 +14,8 @@ SUPPORTED_DISTRIBUTIONS=("ubuntu" "centos" "fedora")
 
 # Supported versions for each platform
 UBUNTU_VERSIONS=("14.04" "14.10" "15.04" "15.10" "16.04" "16.10" "17 04" "17 10" "18.04" "18.10")
-CENTOS_VERSIONS=("6" "7")
-FEDORA_VERSIONS=("24" "25" "26")
+CENTOS_VERSIONS=("6" "6.1" "6.2" "6.3" "6.4" "6.5" "6.6" "6.7" "6.8" "6.9" "6.10" "7" "7.0.1406" "7.1.1503" "7.2.1511" "7.3.1611" "7.4.1708" "7.5.1804" "7.6.1810" "7.7.1908" "8" "8.0.1905" "8.1.1911")
+FEDORA_VERSIONS=("24" "25" "26" "27" "28" "29" "30" "31" "32")
 
 # Supported Java verisons
 SUPPORTED_JAVA_VERSIONS=("11")
@@ -33,9 +33,16 @@ echo -e "\n\e[31m##### Cytoscape System Requirements Checker for Linux #####\e[m
 echo -e " - Target Cytoscape version: \e[36m$CYTOSCAPE_VERSION\e[m"
 echo -e " - Your Shell: \e[36m$shell\e[m"
 
-# Extract major version
-distribution=$(lsb_release -si)
-os_version=$(lsb_release -sr)
+which lsb_release > /dev/null 2>&1
+if [ $? -eq 0 ] ; then
+    # Extract major version
+    distribution=$(lsb_release -si)
+    os_version=$(lsb_release -sr)
+else 
+    # unable to get os information so just set these fields to "unknown"
+    distribution="unknown"
+    os_version="unknown"
+fi
 
 # Check distribution
 echo -e "\n\e[;1m===== Checking Distribution =====\e[m\n"
@@ -59,9 +66,16 @@ if [ "$os_pass" -eq 1 ]
 then
     echo -e "\e[36;1m - Pass: Distribution = $distribution\e[m"
 else
-    echo -e "\n\e[31mWARNING: This Linux distribution is not officially supported: $distribution\e[m" 1>&2
-    echo "Cytoscape might work with this machine, but not tested."
-    echo "Please use any of the following distributions if possible: [${SUPPORTED_DISTRIBUTIONS[@]}]"
+    # if lsb_release is not installed $distribution will be set to "unknown"
+    # so let user know they should install lsb_release
+    if [ "$distribution" == "unknown" ] ; then
+        echo -e "\n\e[31mERROR: Unable to determine distribution. Please install lsb_release command.\e[m\n"
+    else
+        echo -e "\n\e[31mWARNING: This Linux distribution is not officially supported: $distribution\e[m" 1>&2
+    
+        echo "Cytoscape might work with this machine, but not tested."
+        echo "Please use any of the following distributions if possible: [${SUPPORTED_DISTRIBUTIONS[@]}]"
+    fi
     pass=false
 fi
 
