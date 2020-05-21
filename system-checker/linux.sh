@@ -4,7 +4,7 @@
 ####################################
 
 # Target Cytoscape version for this script
-CYTOSCAPE_VERSION="3.7.2"
+CYTOSCAPE_VERSION="3.8.0"
 
 # Cytoscpae App Store location
 APP_STORE_URL="apps.cytoscape.org"
@@ -14,11 +14,11 @@ SUPPORTED_DISTRIBUTIONS=("ubuntu" "centos" "fedora")
 
 # Supported versions for each platform
 UBUNTU_VERSIONS=("14.04" "14.10" "15.04" "15.10" "16.04" "16.10" "17 04" "17 10" "18.04" "18.10")
-CENTOS_VERSIONS=("6" "7")
-FEDORA_VERSIONS=("24" "25" "26")
+CENTOS_VERSIONS=("6" "6.1" "6.2" "6.3" "6.4" "6.5" "6.6" "6.7" "6.8" "6.9" "6.10" "7" "7.0.1406" "7.1.1503" "7.2.1511" "7.3.1611" "7.4.1708" "7.5.1804" "7.6.1810" "7.7.1908" "8" "8.0.1905" "8.1.1911")
+FEDORA_VERSIONS=("24" "25" "26" "27" "28" "29" "30" "31" "32")
 
 # Supported Java verisons
-SUPPORTED_JAVA_VERSIONS=("1.8.0")
+SUPPORTED_JAVA_VERSIONS=("11")
 
 # Error cheking flag
 pass=true
@@ -33,9 +33,16 @@ echo -e "\n\e[31m##### Cytoscape System Requirements Checker for Linux #####\e[m
 echo -e " - Target Cytoscape version: \e[36m$CYTOSCAPE_VERSION\e[m"
 echo -e " - Your Shell: \e[36m$shell\e[m"
 
-# Extract major version
-distribution=$(lsb_release -si)
-os_version=$(lsb_release -sr)
+which lsb_release > /dev/null 2>&1
+if [ $? -eq 0 ] ; then
+    # Extract major version
+    distribution=$(lsb_release -si)
+    os_version=$(lsb_release -sr)
+else 
+    # unable to get os information so just set these fields to "unknown"
+    distribution="unknown"
+    os_version="unknown"
+fi
 
 # Check distribution
 echo -e "\n\e[;1m===== Checking Distribution =====\e[m\n"
@@ -59,9 +66,16 @@ if [ "$os_pass" -eq 1 ]
 then
     echo -e "\e[36;1m - Pass: Distribution = $distribution\e[m"
 else
-    echo -e "\n\e[31mWARNING: This Linux distribution is not officially supported: $distribution\e[m" 1>&2
-    echo "Cytoscape might work with this machine, but not tested."
-    echo "Please use any of the following distributions if possible: [${SUPPORTED_DISTRIBUTIONS[@]}]"
+    # if lsb_release is not installed $distribution will be set to "unknown"
+    # so let user know they should install lsb_release
+    if [ "$distribution" == "unknown" ] ; then
+        echo -e "\n\e[31mERROR: Unable to determine distribution. Please install lsb_release command.\e[m\n"
+    else
+        echo -e "\n\e[31mWARNING: This Linux distribution is not officially supported: $distribution\e[m" 1>&2
+    
+        echo "Cytoscape might work with this machine, but not tested."
+        echo "Please use any of the following distributions if possible: [${SUPPORTED_DISTRIBUTIONS[@]}]"
+    fi
     pass=false
 fi
 
@@ -108,9 +122,9 @@ fi
 # Test 2: Try java -version command
 echo -e "\n\e[;1m===== Checking Java Version =====\e[m\n"
 
-java_version_original=$(java -version 2>&1 | grep "java version")
+java_version_original=$(java -version 2>&1 | grep "openjdk version")
 java_version=$(echo $java_version_original | awk 'NR==1{gsub(/"/,""); print $3}')
-java_major_version=$(echo $java_version | awk -F'_' '{print $1}')
+java_major_version=$(echo $java_version | awk -F'.' '{print $1}')
 
 if [[ $java_major_version == ${SUPPORTED_JAVA_VERSIONS[0]} ]]
 then
@@ -130,8 +144,8 @@ if [[ $JAVA_HOME != "" ]]; then
     echo " - Pass: JAVA_HOME found: $JAVA_HOME"
 else
     echo -e "\e[31mError: \$JAVA_HOME is not set.\e[m\n"
-    echo -e "If you don't have Java yet, please download JDK from Oracle web site:\n"
-    echo -e "http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html\n"
+    echo -e "If you don't have Java yet, please download and install a compatible JDK such as AdoptOpenJDK:\n"
+    echo -e "https://adoptopenjdk.net/?variant=openjdk11&jvmVariant=hotspot\n"
     echo -e "\e[31mDon't forget to select correct version.\e[m"
     echo -e "Your machine type is: \e[31m$machine_type\e[m"
     pass=false
@@ -147,12 +161,11 @@ ping_pass=true
 host $APP_STORE_URL || echo -e "\e[31mError: Could not resolve $APP_STORE_URL\e[m\n"; ping_pass=false
 
 if [[ $ping_pass ]];then
-    ping_result=$(ping -c $NUM_TRY -t 15 $APP_STORE_URL | grep loss)
-    num_success=$(echo $ping_result | awk '{print $4}')
+    curl_result=$(curl -I https://apps.cytoscape.org | awk 'NR==1{print $2}')
+   
+    echo -e "\n\e[36m - Result: $curl_result\e[m"
 
-    echo -e "\n\e[36m - Result: $ping_result\e[m"
-
-    if [[ $num_success -eq $NUM_TRY ]]; then
+    if [[ $curl_result -eq "200" ]]; then
         echo -e "\e[36m - Success!"
     else
         echo -e "\e[31mError: Seems connection to App Store is unstable.\e[m\n"
