@@ -37,3 +37,5 @@ nosetests.xml
 
 .DS_Store
 ./release-generator/create_next_rc/build
+./weekly_build/
+./build_3.7.2/
