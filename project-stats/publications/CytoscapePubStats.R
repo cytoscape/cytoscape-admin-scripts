@@ -4,6 +4,7 @@
 library(europepmc)
 library(dplyr)
 library(magrittr)
+library(tidyr)
 
 ##Search for Cytoscape
 ##Run once to see how many records there are. Default returned is 100.
@@ -26,4 +27,9 @@ journal_count <- stats %>%
   group_by(journalTitle) %>%
   summarise(count = n()) %>%
   arrange(desc(count), journalTitle)
+
+##Write to files
+setwd("~/Dropbox (Gladstone)/Work/Cytoscape")
+write.csv(citation_count, file="CytoPubsCitationCount.csv", row.names = FALSE)
+write.csv(journal_count, file="CytoPubsJournalCount.csv", row.names = FALSE)
 
