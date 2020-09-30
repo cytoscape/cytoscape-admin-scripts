@@ -11,7 +11,7 @@ posts <- read.csv("CytoTumblrPosts.csv", stringsAsFactors = F)
 
 ##Collect PubMed  data
 temp_df <- data.frame()
-pmid <- "32934754"  ##identified manually based on network figures
+pmid <- "32977829"  ##identified manually based on network figures
 
 x <- easyPubMed::fetch_PMID_data(pmids = pmid)
 record_df <- table_articles_byAuth(pubmed_data = x, included_authors = "all", max_chars = 0, autofill = TRUE, getKeywords = TRUE)
@@ -34,7 +34,6 @@ if (length(corr_author) == 0){
 if (length(email) > 1){
   email<- paste(unlist(email), collapse=", ")
 }
-
 if (length(corr_author) > 1){
   corr_author<- paste(unlist(corr_author), collapse=", ")
 }
@@ -55,4 +54,5 @@ cat(final)
 ## Write to outreach spreadsheet file
 posts <- rbind(posts, temp_df)
 write.csv(posts, file="CytoTumblrPosts.csv", row.names = FALSE)
+write.csv(posts, file="../Work/github/cytoscape-admin-scripts/project-stats/publications/CytoTumblrPosts.csv", row.names = FALSE)
 
