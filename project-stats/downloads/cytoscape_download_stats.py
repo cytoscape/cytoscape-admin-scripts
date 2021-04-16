@@ -44,7 +44,7 @@ def _parse_arguments(desc, args):
                         help='Path to JSON file containing download ' +
                              'statistics from github. If set, direct query ' +
                         'is skipped')
-    parser.add_argument('--matplotlibgui', default='Qt4Agg',
+    parser.add_argument('--matplotlibgui', default='svg',
                         help='Library to use for plotting')
     parser.add_argument('--logconf', default=None,
                         help='Path to python logging configuration file in '
@@ -215,7 +215,7 @@ def add_days_as_primary_release(release_dict=None, version_list=None):
 
 
 def plot_downloads(release_dict=None, version_list=None, total_downloads=None,
-                   total_days=None, outdir=None):
+                   outdir=None):
     """
 
     :param release_dict:
@@ -245,19 +245,52 @@ def plot_downloads(release_dict=None, version_list=None, total_downloads=None,
     fig.patches.extend([plt.Rectangle((0, 0), 1, 1,
                                       fill=False, color='black', alpha=1, zorder=1000,
                                       transform=fig.transFigure, figure=fig, linewidth=2.0)])
-    plt.tight_layout(pad=2)
+    fig.set_tight_layout(True)
     plt.savefig(outdir + '/downloads.svg')
     plt.close()
 
 
-def plot_downloads_by_platform(release_dict=None, version_list=None, total_downloads=None,
-                               total_days=None, outdir=None):
+def plot_downloads_by_day(release_dict=None, version_list=None, total_downloads=None,
+                          outdir=None):
     """
 
     :param release_dict:
     :param version_list:
     :param total_downloads:
-    :param total_days:
+    :return:
+    """
+    downloads = []
+    for version in version_list:
+        downloads.append(release_dict[version]['total_downloads']/release_dict[version]['days_as_latest_release'])
+
+    x_pos = np.arange(len(version_list))
+    fig, ax = plt.subplots()
+
+    ax.bar(x_pos, downloads, align='center')
+    ax.set_xticks(x_pos)
+    ax.set_xticklabels(version_list)
+    # ax.yaxis.grid()
+    ax.set_xlabel('Cytoscape Version', fontweight='bold')
+    ax.set_ylabel('# Downloads per day', fontweight='bold')
+    ax.invert_xaxis()  # labels read top-to-bottom
+
+    ax.set_title('Downloads per day (' +
+                 '{:,}'.format(total_downloads) + ' downloads)',
+                 fontweight='bold')
+    fig.patches.extend([plt.Rectangle((0, 0), 1, 1,
+                                      fill=False, color='black', alpha=1, zorder=1000,
+                                      transform=fig.transFigure, figure=fig, linewidth=2.0)])
+    fig.set_tight_layout(True)
+    plt.savefig(outdir + '/downloads_byday.svg')
+    plt.close()
+
+
+def plot_downloads_by_platform(release_dict=None, version_list=None,
+                               outdir=None):
+    """
+
+    :param release_dict:
+    :param version_list:
     :return:
     """
     mac = []
@@ -295,7 +328,7 @@ def plot_downloads_by_platform(release_dict=None, version_list=None, total_downl
     fig.patches.extend([plt.Rectangle((0, 0), 1, 1,
                                       fill=False, color='black', alpha=1, zorder=1000,
                                       transform=fig.transFigure, figure=fig, linewidth=2.0)])
-    plt.tight_layout(pad=2)
+    fig.set_tight_layout(True)
     plt.savefig(outdir + '/downloads_by_platform.svg')
     plt.close()
 
@@ -346,10 +379,12 @@ def main(args):
 
     plot_downloads(release_dict=final_dict, version_list=version_list,
                    total_downloads=grand_total,
-                   total_days=num_rel_days, outdir=theargs.outdir)
+                   outdir=theargs.outdir)
+    plot_downloads_by_day(release_dict=final_dict, version_list=version_list,
+                          total_downloads=grand_total,
+                          outdir=theargs.outdir)
     plot_downloads_by_platform(release_dict=final_dict, version_list=version_list,
-                               total_downloads=grand_total,
-                               total_days=num_rel_days, outdir=theargs.outdir)
+                               outdir=theargs.outdir)
 
 
 if __name__ == '__main__':  # pragma: no cover
