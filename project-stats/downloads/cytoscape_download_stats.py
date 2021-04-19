@@ -46,6 +46,9 @@ def _parse_arguments(desc, args):
                         'is skipped')
     parser.add_argument('--matplotlibgui', default='svg',
                         help='Library to use for plotting')
+    parser.add_argument('--plot_totaldownloads', action='store_true',
+                        help='If set, generates downloads.svg containing '
+                             'total downloads by version')
     parser.add_argument('--logconf', default=None,
                         help='Path to python logging configuration file in '
                              'this format: '
@@ -377,13 +380,15 @@ def main(args):
     print('Total downloads since ' + version_list[-1] + ': ' + str(grand_total) + ', ' +
           str(round(float(grand_total)/float(num_rel_days.days)*30)) + ' downloads per month')
 
-    plot_downloads(release_dict=final_dict, version_list=version_list,
-                   total_downloads=grand_total,
-                   outdir=theargs.outdir)
+    if theargs.plot_totaldownloads is True:
+        plot_downloads(release_dict=final_dict, version_list=version_list,
+                       total_downloads=grand_total,
+                       outdir=theargs.outdir)
     plot_downloads_by_day(release_dict=final_dict, version_list=version_list,
                           total_downloads=grand_total,
                           outdir=theargs.outdir)
-    plot_downloads_by_platform(release_dict=final_dict, version_list=version_list,
+    plot_downloads_by_platform(release_dict=final_dict,
+                               version_list=version_list,
                                outdir=theargs.outdir)
 
 
