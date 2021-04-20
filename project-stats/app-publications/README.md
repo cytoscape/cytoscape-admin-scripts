@@ -82,3 +82,19 @@ Here is a description of the results
  * `cited_publications_journal.csv`
 
     * CSV containing counts of journals for publications citing papers in \<queryfile\>. This is calculated using the 'unique medline file'`
+    
+ * `cited_publications_per_year.csv`
+ 
+    * CSV containing counts of publications published each year for publications citing papers in <queryfile>. This is calculated using the 'unique medline file'
+          
+ * `cited_publications_per_year.svg`
+
+    * Bar chart show cited publications per year for publications that cited papers in \<query file\>. Derived from 'cited_publications_per_year.csv'
+          
+ * `top_cited_publications_journal.svg`
+    
+    * Bar chart figure using top 15 publication venues for publications that cited papers in \<queryfile\>. Derived from 'cited_publications_journal.csv' 
+    
+* `top_cited_publications_grants.svg`
+        
+    * Bar chart figure using top 15 grant funding agencies for publications that cited papers in \<query file\>. Derived from 'cited_publications_grants.csv'
