@@ -378,6 +378,20 @@ def grant_value_cleanup_func(val):
     return val
 
 
+def get_year_from_publishdate(val):
+    """
+    Takes date published and extracts the year as a number
+    :param val: raw publish date from medline
+    :type val: str
+    :return: year article was published
+    :rtype: int
+    """
+    if val is None or val == '':
+        return 0
+    split_val = val.split(' ')
+    return int(split_val[0])
+
+
 def write_count_summary(outfile=None, medlinefile=None,
                         fieldprefix=None, fieldlabel=None,
                         value_cleanup_func=None):
@@ -443,11 +457,11 @@ def plot_journal_summary(inputfile=None,
                          outfile=None, top_count=15):
     """
     Takes journal publication summary CSV file and
-    generates pie chart
+    generates bar chart
 
-    :param inputfile: Path to cited_publications_journal.csv file
+    :param inputfile: Path to top_cited_publications_journal.csv file
     :type inputfile: str
-    :param outfile: Path to write piechart
+    :param outfile: Path to write bar chart, extension denotes format
     :type outfile: str
     :return:
     """
@@ -459,11 +473,6 @@ def plot_journal_summary(inputfile=None,
     top_df = df[:top_count]
     fig, ax = plt.subplots()
     top_total_citations = top_df['Count'].sum()
-    # autopct='%1.0f%%'
-    # autopct=lambda pct: top_total_citations*pct/total_citations
-    # ax = top_df.plot(kind='pie', y='Count', ax=ax,
-    #                 autopct=lambda pct: '{:.0f}%'.format(top_total_citations * pct / total_citations),
-    #                 legend=False)
 
     ax = top_df.plot(kind='bar', y='Count', ax=ax,
                      legend=False)
@@ -489,18 +498,22 @@ def plot_grant_summary(inputfile=None,
                        outfile=None, top_count=15):
     """
     Takes cited publication grant summary CSV file and
-    generates pie chart
+    generates bar chart
 
-    :param inputfile: Path to cited_publications_journal.csv file
+    :param inputfile: Path to top_cited_publications_grant.csv file
     :type inputfile: str
-    :param outfile: Path to write piechart
+    :param outfile: Path to write bar chart, extension denotes format
     :type outfile: str
     :return:
     """
     df = pandas.read_csv(inputfile, delimiter=',', header=0)
     df.set_index('Grant', inplace=True)
     num_agencies = len(df)
+
+    # sort table by count
     df.sort_values(by=['Count'], ascending=False, inplace=True)
+
+    # grab the 'top_count' entries
     top_df = df[:top_count]
     fig, ax = plt.subplots()
 
@@ -511,11 +524,63 @@ def plot_grant_summary(inputfile=None,
     ax.set_title('Top ' + str(top_count) + ' of ' + '{:,}'.format(num_agencies) +
                  ' Funding Agencies for Cytoscape Citations',
                  fontweight='bold')
+
+    # draw box around plot
     fig.patches.extend([plt.Rectangle((0, 0), 1, 1,
                                       fill=False, color='black',
                                       alpha=1, zorder=1000,
                                       transform=fig.transFigure,
                                       figure=fig, linewidth=2.0)])
+    fig.set_tight_layout(True)
+    plt.savefig(outfile)
+    plt.close()
+
+
+def plot_publishdate_summary(inputfile=None,
+                             outfile=None):
+    """
+    Takes publish date summary CSV and generate a bar chart showing
+    number of cited publications each year
+\
+    :param inputfile: Path to top_cited_publications_journal.csv file
+    :type inputfile: str
+    :param outfile: Path to write bar chart, extension denotes format
+    :type outfile: str
+    :return:
+    """
+    df = pandas.read_csv(inputfile, delimiter=',', header=0)
+    df.set_index('PublishYear', inplace=True)
+
+    # sort the table by year published
+    df.sort_values(by=['PublishYear'], ascending=True, inplace=True)
+    fig, ax = plt.subplots()
+
+    # we want latest year on right so invert xaxis
+    ax.invert_xaxis()
+
+    # grab the current year to note it is not complete
+    val = df.tail(1)
+    current_year = val.iloc[0].name
+
+    total_citations = df['Count'].sum()
+    ax = df.plot(kind='bar', y='Count', ax=ax,
+                 legend=False)
+
+    ax.yaxis.label.set_text('Count')
+    ax.xaxis.label.set_text('Publish Year')
+    ax.set_title('Pubmed Cytoscape Cytoscape Citations (' +
+                 '{:,}'.format(total_citations) +
+                 ')\n(' + str(current_year) + ' is a partial count)',
+                 fontweight='bold')
+
+    # put black box around figure
+    fig.patches.extend([plt.Rectangle((0, 0), 1, 1,
+                                      fill=False, color='black',
+                                      alpha=1, zorder=1000,
+                                      transform=fig.transFigure,
+                                      figure=fig, linewidth=2.0)])
+
+    # redo layout to not have lots of white space
     fig.set_tight_layout(True)
     plt.savefig(outfile)
     plt.close()
@@ -592,6 +657,27 @@ def main(args):
           papers in <queryfile>. This is 
           calculated using the 'unique medline file'
           
+    cited_publications_per_year.csv
+        - CSV containing counts of publications
+          published each year for publications
+          citing papers in <queryfile>. This is
+          calculated using the 'unique medline file'
+          
+    cited_publications_per_year.svg
+        - Bar chart figure derived from 
+          'cited_publications_per_year.csv'
+          
+    top_cited_publications_journal.svg
+        - Bar chart figure using top 15 publication venues
+          for publications that cited papers in <queryfile>.
+          Derived from 'cited_publications_journal.csv' 
+    
+    top_cited_publications_grants.svg
+        - Bar chart figure using top 15 grant funding
+          agencies for publications that cited papers in
+          <query file>.
+          Derived from 'cited_publications_grants.csv' 
+
     """
     theargs = _parse_arguments(desc, args[1:])
 
@@ -701,12 +787,23 @@ def main(args):
                         fieldlabel='Journal',
                         value_cleanup_func=None)
 
+    # write articles published summary file
+    published_date_summary = os.path.join(outdir, 'cited_publications_per_year.csv')
+    write_count_summary(outfile=published_date_summary,
+                        medlinefile=merged_medline_file,
+                        fieldprefix=LABEL_TO_MEDLINE['publishdate'],
+                        fieldlabel='PublishYear',
+                        value_cleanup_func=get_year_from_publishdate)
+
+    plot_publishdate_summary(inputfile=published_date_summary,
+                             outfile=os.path.join(outdir,
+                                                  'cited_publications_per_year.svg'))
     plot_journal_summary(inputfile=journal_summary,
                          outfile=os.path.join(outdir,
-                                              'top_publications_journal.svg'))
+                                              'top_cited_publications_journal.svg'))
     plot_grant_summary(inputfile=grant_summary,
                        outfile=os.path.join(outdir,
-                                            'top_agencies_funding.svg'))
+                                            'top_cited_publications_grants.svg'))
 
     # output some summary statistics
     with open(os.path.join(outdir, 'summary.txt'), 'w') as f:
