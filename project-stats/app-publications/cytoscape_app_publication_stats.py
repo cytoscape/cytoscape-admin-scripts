@@ -13,6 +13,10 @@ import datetime
 import csv
 from tqdm import tqdm
 
+import matplotlib
+import matplotlib.pyplot as plt
+import matplotlib.ticker as mtick
+
 
 class Formatter(argparse.ArgumentDefaultsHelpFormatter,
                 argparse.RawDescriptionHelpFormatter):
@@ -68,6 +72,8 @@ def _parse_arguments(desc, args):
                              'and citation != \'\'; ')
     parser.add_argument('outdir',
                         help='Output directory')
+    parser.add_argument('--matplotlibgui', default='svg',
+                        help='Library to use for plotting')
     parser.add_argument('--email', required=True,
                         help='A valid email address to send to the ncbi web api,'
                              'as required in the documentation.')
@@ -433,6 +439,88 @@ def merge_medline_files(outfile=None, batch_medlinefiles=None):
                         out_stream.write(line)
 
 
+def plot_journal_summary(inputfile=None,
+                         outfile=None, top_count=15):
+    """
+    Takes journal publication summary CSV file and
+    generates pie chart
+
+    :param inputfile: Path to cited_publications_journal.csv file
+    :type inputfile: str
+    :param outfile: Path to write piechart
+    :type outfile: str
+    :return:
+    """
+    df = pandas.read_csv(inputfile, delimiter=',', header=0)
+    df.set_index('Journal', inplace=True)
+    num_journals = len(df)
+    total_citations = df['Count'].sum()
+    df.sort_values(by=['Count'], ascending=False, inplace=True)
+    top_df = df[:top_count]
+    fig, ax = plt.subplots()
+    top_total_citations = top_df['Count'].sum()
+    # autopct='%1.0f%%'
+    # autopct=lambda pct: top_total_citations*pct/total_citations
+    # ax = top_df.plot(kind='pie', y='Count', ax=ax,
+    #                 autopct=lambda pct: '{:.0f}%'.format(top_total_citations * pct / total_citations),
+    #                 legend=False)
+
+    ax = top_df.plot(kind='bar', y='Count', ax=ax,
+                     legend=False)
+    ax.yaxis.label.set_text('# Citations')
+    ax.xaxis.label.set_text('Citation Venue')
+    ax.set_title('Top ' + str(top_count) + ' of ' +
+                 '{:,}'.format(num_journals) +
+                 ' Cytoscape Citation Venues' +
+                 '\n(' + '{:,}'.format(top_total_citations) + ' of ' +
+                 '{:,}'.format(total_citations) + ' citations)',
+                 fontweight='bold')
+    fig.patches.extend([plt.Rectangle((0, 0), 1, 1,
+                                      fill=False, color='black',
+                                      alpha=1, zorder=1000,
+                                      transform=fig.transFigure,
+                                      figure=fig, linewidth=2.0)])
+    fig.set_tight_layout(True)
+    plt.savefig(outfile)
+    plt.close()
+
+
+def plot_grant_summary(inputfile=None,
+                       outfile=None, top_count=15):
+    """
+    Takes cited publication grant summary CSV file and
+    generates pie chart
+
+    :param inputfile: Path to cited_publications_journal.csv file
+    :type inputfile: str
+    :param outfile: Path to write piechart
+    :type outfile: str
+    :return:
+    """
+    df = pandas.read_csv(inputfile, delimiter=',', header=0)
+    df.set_index('Grant', inplace=True)
+    num_agencies = len(df)
+    df.sort_values(by=['Count'], ascending=False, inplace=True)
+    top_df = df[:top_count]
+    fig, ax = plt.subplots()
+
+    ax = top_df.plot(kind='bar', y='Count', ax=ax,
+                     legend=False)
+    ax.yaxis.label.set_text('# Citations')
+    ax.xaxis.label.set_text('Funding Agency')
+    ax.set_title('Top ' + str(top_count) + ' of ' + '{:,}'.format(num_agencies) +
+                 ' Funding Agencies for Cytoscape Citations',
+                 fontweight='bold')
+    fig.patches.extend([plt.Rectangle((0, 0), 1, 1,
+                                      fill=False, color='black',
+                                      alpha=1, zorder=1000,
+                                      transform=fig.transFigure,
+                                      figure=fig, linewidth=2.0)])
+    fig.set_tight_layout(True)
+    plt.savefig(outfile)
+    plt.close()
+
+
 def main(args):
     """
 
@@ -515,6 +603,8 @@ def main(args):
     # setup logging
     _setup_logging(theargs)
 
+    matplotlib.use(theargs.matplotlibgui)
+
     toolargs = '&tool=cytoscapeAppPubStats&email=' + theargs.email
     urlprefix = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/'
     citation_dict = get_app_citations_from_file_as_dict(theargs.queryfile)
@@ -593,21 +683,30 @@ def main(args):
                         fieldprefix=LABEL_TO_MEDLINE['origin'],
                         fieldlabel='Country')
 
+
     # write grant summary file
-    write_count_summary(outfile=os.path.join(outdir,
-                                             'cited_publications_grants.csv'),
+    grant_summary = os.path.join(outdir,
+                                 'cited_publications_grants.csv')
+    write_count_summary(outfile=grant_summary,
                         medlinefile=merged_medline_file,
                         fieldprefix=LABEL_TO_MEDLINE['grant'],
                         fieldlabel='Grant',
                         value_cleanup_func=grant_value_cleanup_func)
 
     # write journal summary file
-    write_count_summary(outfile=os.path.join(outdir,
-                                             'cited_publications_journal.csv'),
+    journal_summary = os.path.join(outdir, 'cited_publications_journal.csv')
+    write_count_summary(outfile=journal_summary,
                         medlinefile=merged_medline_file,
                         fieldprefix=LABEL_TO_MEDLINE['journal'],
                         fieldlabel='Journal',
                         value_cleanup_func=None)
+
+    plot_journal_summary(inputfile=journal_summary,
+                         outfile=os.path.join(outdir,
+                                              'top_publications_journal.svg'))
+    plot_grant_summary(inputfile=grant_summary,
+                       outfile=os.path.join(outdir,
+                                            'top_agencies_funding.svg'))
 
     # output some summary statistics
     with open(os.path.join(outdir, 'summary.txt'), 'w') as f:
