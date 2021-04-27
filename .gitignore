@@ -37,7 +37,7 @@ nosetests.xml
 
 .DS_Store
 ./release-generator/create_next_rc/build
-./weekly_build/
+./release-build/
 ./build_3.7.2/
 
 project-stats/publications/CytoTumblrPosts.csv
