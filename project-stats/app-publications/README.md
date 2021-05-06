@@ -8,6 +8,10 @@ takes a tab delimited file containing Cytoscape App names along
 with pubmed article ids and generates a set of report files
 by querying ncbi web APIs.
 
+If the `cytoscape_papers.txt` tab delimited file is used then the analysis is
+done on the three main Cytoscape publications and the `.svg` files generated are
+the ones put on the [Cytoscape Project Statistics Page](https://cytoscape.org/stat.html)
+
 To generate a report follow the steps below. 
 
 ## Requirements
@@ -16,6 +20,7 @@ To generate a report follow the steps below.
  * requests
  * pandas
  * tqdm
+ * matplotlib
 
 ### Step 1 Get updated list of Cytoscape App publications
 
