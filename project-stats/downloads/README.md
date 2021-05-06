@@ -1,7 +1,7 @@
-# Cytoscape Downloads
+# [Cytoscape](https://cytoscape.org) Downloads
 
 This directory contains scripts to generate plots and summary reports
-for Cytoscape desktop download as well as Cytoscape App downloads.
+for [Cytoscape](https://cytoscape.org) desktop downloads as well as [Cytoscape](https://cytoscape.org) App downloads.
  
 
 ## Requirements
@@ -13,8 +13,8 @@ for Cytoscape desktop download as well as Cytoscape App downloads.
 ## Cytoscape desktop download stats
 
 This section describes the steps to generate statistics and figures
-for downloads of the Cytoscape desktop application. Since 2018 Github
-has been serving the installer files for the Cytoscape desktop application.
+for downloads of the [Cytoscape](https://cytoscape.org) desktop application. Since 2018 [Github](https://github.com)
+has been serving the installer files for the [Cytoscape](https://cytoscape.org) desktop application.
 
 ### Step 1 Download JSON file from github
 
@@ -30,8 +30,8 @@ to a file: https://api.github.com/repos/cytoscape/cytoscape/releases
 
 ### Step 2 Generate Report
 
-Open a terminal with required Python and packages noted
-in the requirements and run the following command:
+Open a terminal with required [Python](https://python.org) and packages installed as noted
+in the requirements section and run the following command:
 
 ```Bash
 ./cytoscape_download_stats.py `date +%m_%d_%Y`_releases.json ./cytoscape_report -vvv
@@ -58,10 +58,10 @@ The above command will parse the file passed and generate files under
    
     Plot that shows breakdown of downloads per day by Cytoscape Version. 
 
-## Cytoscape App download stats
+## [Cytoscape](https://cytoscape.org) App download stats
 
 This section describes the steps to generate statistics and figures
-for downloads of Cytoscape Apps. 
+for downloads of [Cytoscape Apps.](https://appstore.cytoscape.org) 
 
 ### Step 1 Download JSON file from [AppStore](https://appstore.cytoscape.org)
 
@@ -77,13 +77,16 @@ to a file: http://apps.cytoscape.org/download/stats/timeline
 
 ### Step 2 Generate report
 
+Open a terminal with required [Python](https://python.org) and packages installed as noted
+in the requirements section and run the following command:
+
 ```Bash
 ./app_download_stats.py `date +%m_%d_%Y`_app_downloads.json ./app_report -vvv
 ```
 
 ### Step 3 Review results
 
-A summary of downloads per version will be output to standard out and 
+A summary of downloads per version and platform will be output to standard out and 
  two `svg` files will be written to the output directory specified on the command
  line (`./app_report` if above command was invoked)
  
