@@ -77,6 +77,9 @@ def _parse_arguments(desc, args):
     parser.add_argument('--email', required=True,
                         help='A valid email address to send to the ncbi web api,'
                              'as required in the documentation.')
+    parser.add_argument('--name', help='Used as tool name in figures and '
+                                       'tables',
+                        default='Cytoscape')
     parser.add_argument('--logconf', default=None,
                         help='Path to python logging configuration file in '
                              'this format: '
@@ -453,7 +456,7 @@ def merge_medline_files(outfile=None, batch_medlinefiles=None):
                         out_stream.write(line)
 
 
-def plot_journal_summary(inputfile=None,
+def plot_journal_summary(inputfile=None, tool_name='Cytoscape',
                          outfile=None, top_count=15):
     """
     Takes journal publication summary CSV file and
@@ -480,7 +483,7 @@ def plot_journal_summary(inputfile=None,
     ax.xaxis.label.set_text('Citation Venue')
     ax.set_title('Top ' + str(top_count) + ' of ' +
                  '{:,}'.format(num_journals) +
-                 ' Cytoscape Citation Venues' +
+                 ' ' + tool_name + ' Citation Venues' +
                  '\n(' + '{:,}'.format(top_total_citations) + ' of ' +
                  '{:,}'.format(total_citations) + ' citations)',
                  fontweight='bold')
@@ -494,7 +497,7 @@ def plot_journal_summary(inputfile=None,
     plt.close()
 
 
-def plot_grant_summary(inputfile=None,
+def plot_grant_summary(inputfile=None, tool_name='Cytoscape',
                        outfile=None, top_count=15):
     """
     Takes cited publication grant summary CSV file and
@@ -522,7 +525,7 @@ def plot_grant_summary(inputfile=None,
     ax.yaxis.label.set_text('# Citations')
     ax.xaxis.label.set_text('Funding Agency')
     ax.set_title('Top ' + str(top_count) + ' of ' + '{:,}'.format(num_agencies) +
-                 ' Funding Agencies for Cytoscape Citations',
+                 ' Funding Agencies for ' + tool_name + ' Citations',
                  fontweight='bold')
 
     # draw box around plot
@@ -536,7 +539,7 @@ def plot_grant_summary(inputfile=None,
     plt.close()
 
 
-def plot_publishdate_summary(inputfile=None,
+def plot_publishdate_summary(inputfile=None, tool_name='Cytoscape',
                              outfile=None):
     """
     Takes publish date summary CSV and generate a bar chart showing
@@ -568,7 +571,7 @@ def plot_publishdate_summary(inputfile=None,
 
     ax.yaxis.label.set_text('Count')
     ax.xaxis.label.set_text('Publish Year')
-    ax.set_title('Pubmed Cytoscape Cytoscape Citations (' +
+    ax.set_title('Pubmed ' + tool_name + ' Citations (' +
                  '{:,}'.format(total_citations) +
                  ')\n(' + str(current_year) + ' is a partial count)',
                  fontweight='bold')
@@ -795,13 +798,13 @@ def main(args):
                         fieldlabel='PublishYear',
                         value_cleanup_func=get_year_from_publishdate)
 
-    plot_publishdate_summary(inputfile=published_date_summary,
+    plot_publishdate_summary(inputfile=published_date_summary, tool_name=theargs.name,
                              outfile=os.path.join(outdir,
                                                   'cited_publications_per_year.svg'))
-    plot_journal_summary(inputfile=journal_summary,
+    plot_journal_summary(inputfile=journal_summary, tool_name=theargs.name,
                          outfile=os.path.join(outdir,
                                               'top_cited_publications_journal.svg'))
-    plot_grant_summary(inputfile=grant_summary,
+    plot_grant_summary(inputfile=grant_summary, tool_name=theargs.name,
                        outfile=os.path.join(outdir,
                                             'top_cited_publications_grants.svg'))
 
