@@ -19,8 +19,8 @@ can be done by asking the Ideker lab Sys Admin.
 
 ### Step 2 Generate Report
 
-Open a terminal with required [Python](https://python.org) and packages installed as noted
-in the requirements section and run the following command:
+Open a terminal with required [Python](https://python.org) packages installed
+and run the following command:
 
 ```Bash
 ./cytoscape_start_stats.py ./access_logs_dir ./cytoscape_starts_report -vvv
@@ -28,7 +28,7 @@ in the requirements section and run the following command:
 
 **NOTE:** It is assumed all the access logs are stored in `./acess_logs_dir`
 
-**TIP:** To speed up invocation, `starts_by_day.csv` can be passed in lieu of `./access_logs_dir` and
+**TIP:** To speed up invocation for subsequent invocations, `starts_by_day.csv` from a previous run can be passed in lieu of `./access_logs_dir` and
          the script will use start statistics from that file to generate reports
          and plots.  
 
