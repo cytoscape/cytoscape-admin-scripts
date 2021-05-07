@@ -41,8 +41,8 @@ select name,citation,downloads from apps_app where citation is not null and cita
 
 ### Step 2 Generate Report
 
-Open a terminal with required Python and packages noted
-in the requirements and run the following command:
+Open a terminal with required [Python](https://python.org) packages noted
+in the requirements section and run the following command:
 
 ```Bash
 ./cytoscape_app_publication_stats.py apps_with_citations.10.1.2020.txt ./report --email <PUT YOUR EMAIL HERE> -vvv

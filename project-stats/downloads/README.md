@@ -77,8 +77,7 @@ to a file: http://apps.cytoscape.org/download/stats/timeline
 
 ### Step 2 Generate report
 
-Open a terminal with required [Python](https://python.org) and packages installed as noted
-in the requirements section and run the following command:
+Open a terminal with required [Python](https://python.org) packages installed and run the following command:
 
 ```Bash
 ./app_download_stats.py `date +%m_%d_%Y`_app_downloads.json ./app_report -vvv
