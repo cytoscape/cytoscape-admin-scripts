@@ -5,16 +5,13 @@ import sys
 import argparse
 import logging
 import csv
-import functools
-from datetime import date, datetime
-import json
+from datetime import datetime
 import numpy as np
 from tqdm import tqdm
 
 
 import matplotlib
 import matplotlib.pyplot as plt
-import matplotlib.ticker as mtick
 
 
 class Formatter(argparse.ArgumentDefaultsHelpFormatter,
