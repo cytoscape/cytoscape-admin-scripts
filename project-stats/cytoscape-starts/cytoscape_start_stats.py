@@ -255,6 +255,42 @@ def save_starts_per_day(start_dict=None,
             f.write(str(key) + ',' + str(start_dict[key]) + '\n')
 
 
+def save_starts_per_year(start_dict=None,
+                         outdir=None):
+    """
+    Takes **start_dict** and saves a file named starts_by_day.csv
+    to **outdir** directory.
+
+    Example of output:
+
+    .. code-block:: python
+
+        Year,NumberOfStarts
+        2014,250
+
+    :param start_dict: dict of starts by day
+    :type start_dict: dict
+    :param outdir: Directory to save file
+    :type outdir: str
+    :return:
+    """
+
+    starts_per_year = {}
+    for key in start_dict:
+        year = key[key.rindex('/') + 1:]
+        if year not in starts_per_year:
+            starts_per_year[year] = 0
+        starts_per_year[year] += start_dict[key]
+
+    year_list = list(starts_per_year.keys())
+    year_list.sort()
+
+    with open(os.path.join(outdir, 'starts_by_year.csv'), 'w') as f:
+        f.write('Year,NumberOfStarts\n')
+        for key in year_list:
+            f.write(str(key) + ',' + str(starts_per_year[key]) + '\n')
+
+
 def plot_starts_by_year(start_dict=None,
                         outdir=None,
                         plot_values=False):
@@ -348,6 +384,9 @@ def main(args):
     else:
         start_dict, date_list = load_starts_csv(theargs.inputdir,
                                                 start_dict={})
+
+    save_starts_per_year(start_dict,
+                         outdir=theargs.outdir)
     plot_starts_by_year(start_dict,
                         outdir=theargs.outdir)
     plot_starts_by_day(start_dict, date_list=date_list,
