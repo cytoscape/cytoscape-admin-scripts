@@ -51,6 +51,10 @@ The above command will parse the file passed and generate files under
    For subsequent runs of `./cytoscape_start_stats.py` this can be used instead
    of `./acces_log_dir` for quicker generation of figures.
    
+ * `starts_by_year.csv`
+ 
+   CSV file denoting [Cytoscape](https://cytoscape.org) starts per year.
+   
  * `starts_per_day.svg`
 
    Plot that shows [Cytoscape](https://cytoscape.org) starts per day. This plot is the one displayed
