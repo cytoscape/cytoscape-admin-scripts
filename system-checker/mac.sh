@@ -8,7 +8,7 @@
 CYTOSCAPE_VERSION="3.8.2"
 
 # Supported Mac OS versions
-SUPPORTED_OS_VERSIONS=("10.11" "10.12" "10.13" "10.14" "10.15" "11.0" "11.1" "11.2" "11.3" "11.4")
+SUPPORTED_OS_VERSIONS=("10.11" "10.12" "10.13" "10.14" "10.15" "11.0" "11.1" "11.2" "11.3" "11.4" "11.5" "11.6")
 
 # Supported Java verisons
 SUPPORTED_JAVA_VERSIONS=("11")
