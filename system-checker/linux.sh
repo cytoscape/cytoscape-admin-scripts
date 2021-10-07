@@ -4,7 +4,7 @@
 ####################################
 
 # Target Cytoscape version for this script
-CYTOSCAPE_VERSION="3.8.0"
+CYTOSCAPE_VERSION="3.9.0"
 
 # Cytoscpae App Store location
 APP_STORE_URL="apps.cytoscape.org"
@@ -13,9 +13,9 @@ APP_STORE_URL="apps.cytoscape.org"
 SUPPORTED_DISTRIBUTIONS=("ubuntu" "centos" "fedora")
 
 # Supported versions for each platform
-UBUNTU_VERSIONS=("14.04" "14.10" "15.04" "15.10" "16.04" "16.10" "17 04" "17 10" "18.04" "18.10")
-CENTOS_VERSIONS=("6" "6.1" "6.2" "6.3" "6.4" "6.5" "6.6" "6.7" "6.8" "6.9" "6.10" "7" "7.0.1406" "7.1.1503" "7.2.1511" "7.3.1611" "7.4.1708" "7.5.1804" "7.6.1810" "7.7.1908" "8" "8.0.1905" "8.1.1911")
-FEDORA_VERSIONS=("24" "25" "26" "27" "28" "29" "30" "31" "32")
+UBUNTU_VERSIONS=("14.04" "14.10" "15.04" "15.10" "16.04" "16.10" "17 04" "17 10" "18.04" "18.10" "20.04" "21.04")
+CENTOS_VERSIONS=("6" "6.1" "6.2" "6.3" "6.4" "6.5" "6.6" "6.7" "6.8" "6.9" "6.10" "7" "7.0.1406" "7.1.1503" "7.2.1511" "7.3.1611" "7.4.1708" "7.5.1804" "7.6.1810" "7.7.1908" "8" "8.0.1905" "8.1.1911" "8.2.2004" "8.3.2011" "8.4.2105")
+FEDORA_VERSIONS=("24" "25" "26" "27" "28" "29" "30" "31" "32" "33" "34")
 
 # Supported Java verisons
 SUPPORTED_JAVA_VERSIONS=("11")
