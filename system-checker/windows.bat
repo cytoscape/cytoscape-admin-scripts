@@ -55,6 +55,12 @@ if %errorlevel% NEQ 0 (
 ) else (
     echo Java is installed
     echo.
+    echo More details on Java
+    echo --------------------
+    echo.
+    java -version
+    echo.
+    echo.
 )
 
 REM Test for 64 bit
@@ -153,16 +159,6 @@ if %pass% == true (
         echo - App store at %APP_STORE_URL% is not reachable
     )
 )
-echo.
-echo.
-echo.
-
-REM Java -version
-REM -------------
-echo More details on Java
-echo --------------------
-echo.
-java -version
 echo.
 echo.
 echo.
