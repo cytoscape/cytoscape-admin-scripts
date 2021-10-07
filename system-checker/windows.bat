@@ -126,10 +126,12 @@ curl -I https://%APP_STORE_URL% | find "200 OK" >nul
 if %errorlevel% NEQ 0 (
     set pass=false
     set appstore_pass=false
-    echo Problem: The "app" store at %APP_STORE_URL% is not reachable
+    echo.
+    echo Problem: The "app" store at https://%APP_STORE_URL% is not reachable
     echo.
 ) else (
-    echo The "app" store at %APP_STORE_URL% is reachable
+    echo.
+    echo The "app" store at https://%APP_STORE_URL% is reachable
     echo.
 )
 echo.
