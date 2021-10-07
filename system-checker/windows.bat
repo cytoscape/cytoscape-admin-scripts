@@ -167,17 +167,18 @@ echo.
 echo.
 echo.
 
-REM Trace route
-REM -----------
-echo More details on %APP_STORE_URL%
-echo ----------------------------------
-echo.
-echo Going to run trace route command for %APP_STORE_URL% with timeout of %TRACERT_TIMEOUT%ms now...
-tracert -w %TRACERT_TIMEOUT% %APP_STORE_URL%
-echo.
-echo.
-echo.
-
+if %appstore_pass% NEQ true (
+    REM Trace route
+    REM -----------
+    echo More details on %APP_STORE_URL%
+    echo ----------------------------------
+    echo.
+    echo Going to run trace route command for %APP_STORE_URL% with timeout of %TRACERT_TIMEOUT%ms now...
+    tracert -w %TRACERT_TIMEOUT% %APP_STORE_URL%
+    echo.
+    echo.
+    echo.
+)
 REM Wait to close window
 REM --------------------
 pause
