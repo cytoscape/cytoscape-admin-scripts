@@ -66,7 +66,7 @@ for downloads of [Cytoscape Apps.](https://appstore.cytoscape.org)
 ### Step 1 Download JSON file from [AppStore](https://appstore.cytoscape.org)
 
 Either via browser or command line download contents of this link
-to a file: http://apps.cytoscape.org/download/stats/timeline
+to a file: https://apps.cytoscape.org/download/stats/timeline
 
 ```bash
     curl https://apps.cytoscape.org/download/stats/timeline > `date +%m_%d_%Y`_app_downloads.json 
