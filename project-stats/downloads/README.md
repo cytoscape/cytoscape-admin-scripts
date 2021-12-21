@@ -69,7 +69,7 @@ Either via browser or command line download contents of this link
 to a file: http://apps.cytoscape.org/download/stats/timeline
 
 ```bash
-    curl http://apps.cytoscape.org/download/stats/timeline > `date +%m_%d_%Y`_app_downloads.json 
+    curl https://apps.cytoscape.org/download/stats/timeline > `date +%m_%d_%Y`_app_downloads.json 
 ```
 
 **NOTE:** The file `4_21_2021_app_downloads.json` is an example download from above link on April 21, 2021
