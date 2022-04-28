@@ -14,7 +14,7 @@ for [Cytoscape](https://cytoscape.org) desktop starts.
 ### Step 1 Retrieve access logs
 
 Obtain the access logs (~15 gigabytes) and store them in a directory. This
-can be done by asking the Ideker lab Sys Admin.
+can be done by asking the Ideker lab Sys Admin to get the `access*` files from `/data/cellardata/chianti/logs` directory.
 
 
 ### Step 2 Generate Report
