@@ -342,9 +342,18 @@ def grant_value_cleanup_func(val):
     """
     if val is None or '':
         return val
-
+    if 'Japan Science and Technology Agency' in val:
+        return 'Japan Science and Technology Agency'
+    if 'Japan Society for the Promotion of Science' in val:
+        return 'Japan Society for the Promotion of Science'
+    if 'Japan Agency for Medical Research and Development' in val:
+        return 'Japan Agency for Medical Research and Development'
     if '/NIH HHS/United States' in val:
-        return val
+        return 'NIH'
+    if '/FDA HHS/United States' in val:
+        return 'FDA'
+    if '/PHS HHS/United States' in val:
+        return 'PHS'
     if ' NIH HHS/United States' in val:
         return re.sub('^.*\/','',
                       re.sub(' NIH HHS\/United States', '', val))
@@ -372,12 +381,17 @@ def grant_value_cleanup_func(val):
     if 'Natural Science Foundation of China' in val or\
             'National Natural Scientific Foundation of China' in val or\
             'National Nature Science Foundation of China' in val or\
-            'National Science Foundation of China' in val:
+            'National Science Foundation of China' in val or\
+            'national natural science foundation of china' in val:
         return 'National Natural Science Foundation of China'
     if 'National Institute of Allergy and Infectious Diseases' in val:
         return 'NIAID'
     if 'Gordon and Betty Moore Foundation' in val:
         return 'Gordon and Betty Moore Foundation'
+    if 'Biotechnology and Biological Sciences Research Council' in val:
+        return 'Biotechnology and Biological Sciences Research Council'
+    if 'U.S. Department of Defense' in val:
+        return 'U.S. Department of Defense'
     return val
 
 
