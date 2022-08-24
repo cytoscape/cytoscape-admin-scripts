@@ -37,7 +37,9 @@ MEDLINE_TO_LABEL = {'TA  - ': 'journal',
                     'TI  - ': 'title',
                     'DP  - ': 'publishdate',
                     'PL  - ': 'origin',
-                    'LID - ': 'doi'}
+                    'LID - ': 'doi',
+                    'AU  - ': 'author',
+                    'FAU - ': 'fullauthor'}
 """
 Used to translate the cryptic medline
 codes to something human readable
@@ -786,7 +788,6 @@ def main(args):
                         fieldprefix=LABEL_TO_MEDLINE['origin'],
                         fieldlabel='Country')
 
-
     # write grant summary file
     grant_summary = os.path.join(outdir,
                                  'cited_publications_grants.csv')
@@ -802,6 +803,14 @@ def main(args):
                         medlinefile=merged_medline_file,
                         fieldprefix=LABEL_TO_MEDLINE['journal'],
                         fieldlabel='Journal',
+                        value_cleanup_func=None)
+
+    # write author summary file
+    author_summary = os.path.join(outdir, 'cited_publications_author.csv')
+    write_count_summary(outfile=author_summary,
+                        medlinefile=merged_medline_file,
+                        fieldprefix=LABEL_TO_MEDLINE['fullauthor'],
+                        fieldlabel='Author',
                         value_cleanup_func=None)
 
     # write articles published summary file

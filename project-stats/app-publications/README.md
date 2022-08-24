@@ -91,6 +91,10 @@ Here is a description of the results
  * `cited_publications_per_year.csv`
  
     * CSV containing counts of publications published each year for publications citing papers in <queryfile>. This is calculated using the 'unique medline file'
+    
+ * `cited_publications_author.csv`
+  
+    * CSV containing counts of publications published by author. in \<queryfile\>. This is calculated using the 'unique medline file'`
           
  * `cited_publications_per_year.svg`
 
