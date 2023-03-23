@@ -8,7 +8,7 @@
 CYTOSCAPE_VERSION="3.9.1"
 
 # Supported Mac OS versions
-SUPPORTED_OS_VERSIONS=("10.11" "10.12" "10.13" "10.14" "10.15" "11.0" "11.1" "11.2" "11.3" "11.4" "11.5" "11.6" "11.7" "12.0" "12.1" "12.2" "12.3" "12.4" "12.6")
+SUPPORTED_OS_VERSIONS=("10" "11" "12" "13" "14")
 
 # Supported Java verisons
 SUPPORTED_JAVA_VERSIONS=("11")
@@ -26,7 +26,7 @@ echo "Your shell is $shell"
 
 # Extract major version
 os_version_full=$(sw_vers -productVersion)
-os_version=$(echo $os_version_full | awk -F'.' '{print $1 "." $2}')
+os_version=$(echo $os_version_full | awk -F'.' '{print $1}')
 
 # Check OS version.
 os_pass=0
