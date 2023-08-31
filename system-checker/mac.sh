@@ -5,13 +5,13 @@
 ####################################
 
 # Target Cytoscape version for this script
-CYTOSCAPE_VERSION="3.9.1"
+CYTOSCAPE_VERSION="3.10.1"
 
 # Supported Mac OS versions
 SUPPORTED_OS_VERSIONS=("10" "11" "12" "13" "14")
 
 # Supported Java verisons
-SUPPORTED_JAVA_VERSIONS=("11")
+SUPPORTED_JAVA_VERSIONS=("17")
 
 # Default location for Oracle JDK.
 ORACLE_VM_LOCATION="/Library/Java/JavaVirtualMachines"
