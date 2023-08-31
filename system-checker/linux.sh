@@ -4,7 +4,7 @@
 ####################################
 
 # Target Cytoscape version for this script
-CYTOSCAPE_VERSION="3.9.0"
+CYTOSCAPE_VERSION="3.10.1"
 
 # Cytoscpae App Store location
 APP_STORE_URL="apps.cytoscape.org"
@@ -18,7 +18,7 @@ CENTOS_VERSIONS=("6" "6.1" "6.2" "6.3" "6.4" "6.5" "6.6" "6.7" "6.8" "6.9" "6.10
 FEDORA_VERSIONS=("24" "25" "26" "27" "28" "29" "30" "31" "32" "33" "34")
 
 # Supported Java verisons
-SUPPORTED_JAVA_VERSIONS=("11")
+SUPPORTED_JAVA_VERSIONS=("17")
 
 # Error cheking flag
 pass=true
