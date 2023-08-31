@@ -3,16 +3,16 @@
 REM This is a handy reference for this scripting language: https://technet.microsoft.com/en-us/library/cc754335(v=ws.11).aspx
 
 REM Target Cytoscape version for this script
-set CYTOSCAPE_VERSION=3.9.0
+set CYTOSCAPE_VERSION=3.10.1
 
 REM Cytoscpae App Store location
 set APP_STORE_URL=apps.cytoscape.org
 
 REM Minimal Java version
-set MIN_JAVA_VERSION=11
-set MIN_JAVA_VERSION_STR=11
-set MAX_JAVA_VERSION=11
-set MAX_JAVA_VERSION_STR=11
+set MIN_JAVA_VERSION=17
+set MIN_JAVA_VERSION_STR=17
+set MAX_JAVA_VERSION=22
+set MAX_JAVA_VERSION_STR=22
 
 REM Recommended link to download Java
 set JAVA_DOWNLOAD=https://adoptopenjdk.net/?variant=openjdk11&jvmVariant=hotspot
