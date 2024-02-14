@@ -75,8 +75,8 @@ if [[ $java_major_version == ${SUPPORTED_JAVA_VERSIONS[0]} ]]
 then
     echo " - Pass: Current Java Version = $java_version"
 else
-    echo "Fail: Java is not reachable."
-    echo "Try re-installing Java 11."
+    echo "Fail: Java is not reachable or is incorrect version."
+    echo "Try installing or re-installing Java 17."
     exit 1
 fi
 
@@ -86,8 +86,8 @@ if [[ $JAVA_HOME != "" ]]; then
 else
     echo "JAVA_HOME is not set."
     echo "Please add the following to your .${shell}rc file:"
-    echo "export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-11.0_*.jdk/Contents/Home"
-    echo "where * is the latest Java 11 update number."
+    echo "export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-17.0_*.jdk/Contents/Home"
+    echo "where * is the latest Java 17 update number."
     echo "And then type 'source ~/.${shell}rc'"
     exit 1
 fi
