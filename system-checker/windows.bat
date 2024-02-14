@@ -11,11 +11,11 @@ set APP_STORE_URL=apps.cytoscape.org
 REM Minimal Java version
 set MIN_JAVA_VERSION=17
 set MIN_JAVA_VERSION_STR=17
-set MAX_JAVA_VERSION=22
-set MAX_JAVA_VERSION_STR=22
+set MAX_JAVA_VERSION=17
+set MAX_JAVA_VERSION_STR=17
 
 REM Recommended link to download Java
-set JAVA_DOWNLOAD=https://adoptopenjdk.net/?variant=openjdk11&jvmVariant=hotspot
+set JAVA_DOWNLOAD=https://adoptium.net/temurin/archive/?version=17
 
 REM Error checking flags
 set pass=true
