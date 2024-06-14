@@ -217,6 +217,7 @@ def tabulate_downloads(release_dict=None):
     .. code-block::
 
         {<version>: 'mac_downloads': <number of mac downloads>,
+                    'macarm_downloads': <number of mac arm downloads>,
                     'windows_downloads': <number of windows downloads>,
                     'windows32_downloads': <number of windows 32 downloads>,
                     'linux_downloads': <number of linux downloads>,
@@ -235,6 +236,7 @@ def tabulate_downloads(release_dict=None):
         windows = 0
         linux = 0
         mac = 0
+        mac_arm = 0
         created_at = None
         for afile in release_dict[version]['files']:
             filename = afile['name']
@@ -245,7 +247,10 @@ def tabulate_downloads(release_dict=None):
             elif filename.endswith('.sh') or filename.endswith('.gz') or 'unix' in filename:
                 linux += afile['download_count']
             elif filename.endswith('.dmg'):
-                mac += afile['download_count']
+                if 'aarch64' in filename:
+                    mac_arm += afile['download_count']
+                else:
+                    mac += afile['download_count']
             else:
                 LOGGER.warning('File does not match and '
                                'will not be counted: ' + filename)
@@ -255,10 +260,11 @@ def tabulate_downloads(release_dict=None):
                 created_at = afile['created_at']
 
         release_dict[version]['mac_downloads'] = mac
+        release_dict[version]['macarm_downloads'] = mac_arm
         release_dict[version]['windows_downloads'] = windows
         release_dict[version]['windows32_downloads'] = windows32
         release_dict[version]['linux_downloads'] = linux
-        release_dict[version]['total_downloads'] = windows + windows32 + linux + mac
+        release_dict[version]['total_downloads'] = windows + windows32 + linux + mac + mac_arm
         release_dict[version]['created_at'] = created_at
     return release_dict
 
@@ -359,7 +365,7 @@ def plot_downloads_by_day(release_dict=None, version_list=None,
 
     ax.bar(x_pos, downloads, align='center')
     ax.set_xticks(x_pos)
-    ax.set_xticklabels(version_list)
+    ax.set_xticklabels(version_list, rotation=-45)
     ax.set_xlabel('Cytoscape Version', fontweight='bold')
     ax.set_ylabel('# Downloads per day', fontweight='bold')
     ax.invert_xaxis()  # labels read top-to-bottom
@@ -389,32 +395,37 @@ def plot_downloads_by_platform(release_dict=None, version_list=None,
     :return:
     """
     mac = []
+    macarm = []
     linux = []
     windows = []
     windows32 = []
     lin_mac = []
+    lin_mac_macarm = []
     lin_mac_win = []
     for version in version_list:
+        macarm.append(release_dict[version]['macarm_downloads']/release_dict[version]['total_downloads'])
         mac.append(release_dict[version]['mac_downloads']/release_dict[version]['total_downloads'])
         windows.append(release_dict[version]['windows_downloads']/release_dict[version]['total_downloads'])
         windows32.append(release_dict[version]['windows32_downloads']/release_dict[version]['total_downloads'])
         linux.append(release_dict[version]['linux_downloads']/release_dict[version]['total_downloads'])
         lin_mac.append(linux[-1]+mac[-1])
-        lin_mac_win.append(linux[-1]+mac[-1]+windows[-1])
+        lin_mac_macarm.append(lin_mac[-1]+macarm[-1])
+        lin_mac_win.append(lin_mac_macarm[-1] + windows[-1])
 
     x_pos = np.arange(len(version_list))
     fig, ax = plt.subplots()
 
     ax.bar(x_pos, mac, label='Linux', bottom=0)
     ax.bar(x_pos, linux, bottom=mac, label='Mac')
-    ax.bar(x_pos, windows, bottom=lin_mac, label='Windows')
+    ax.bar(x_pos, macarm, bottom=lin_mac, label='Mac ARM')
+    ax.bar(x_pos, windows, bottom=lin_mac_macarm, label='Windows')
     ax.bar(x_pos, windows32, bottom=lin_mac_win, label='Windows 32 bit')
     ax.set_xticks(x_pos)
-    ax.set_xticklabels(version_list)
+    ax.set_xticklabels(version_list, rotation=-45)
     ax.set_ylabel('Percentage', fontweight='bold')
     ax.yaxis.set_major_formatter(mtick.PercentFormatter(xmax=1.0))
     plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc='lower left',
-               ncol=4, mode="expand", borderaxespad=0.)
+               ncol=5, mode="expand", borderaxespad=0.)
     # ax.legend(loc=0)
     ax.set_xlabel('Cytoscape Version', fontweight='bold')
     ax.set_title('Downloads by Platform',
@@ -469,6 +480,7 @@ def main(args):
               ' (windows=' + str(final_dict[version]['windows_downloads']) +
               ', windows32=' + str(final_dict[version]['windows32_downloads']) +
               ', mac=' + str(final_dict[version]['mac_downloads']) +
+              ', macarm=' + str(final_dict[version]['macarm_downloads']) +
               ', linux=' + str(final_dict[version]['linux_downloads']) + ')')
         grand_total += final_dict[version]['total_downloads']
 
