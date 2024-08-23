@@ -5,7 +5,7 @@
 ####################################
 
 # Target Cytoscape version for this script
-CYTOSCAPE_VERSION="3.10.1"
+CYTOSCAPE_VERSION="3.10.2"
 
 # Supported Mac OS versions
 SUPPORTED_OS_VERSIONS=("10" "11" "12" "13" "14")
@@ -13,8 +13,8 @@ SUPPORTED_OS_VERSIONS=("10" "11" "12" "13" "14")
 # Supported Java verisons
 SUPPORTED_JAVA_VERSIONS=("17")
 
-# Default location for Oracle JDK.
-ORACLE_VM_LOCATION="/Library/Java/JavaVirtualMachines"
+# Default location for  JDK.
+JVM_LOCATION="/Library/Java/JavaVirtualMachines"
 
 # This user's shell
 shell=$(echo $SHELL | awk -F'/' '{print $(NF)}')
@@ -51,17 +51,17 @@ fi
 
 # Check Java Version
 
-# Test 1: Check Oracle Java Machine
-jvms=$(find $ORACLE_VM_LOCATION -name jdk-11.0* -type d)
+# Test 1: Check Java Machine
+jvms=$(find $JVM_LOCATION -name jdk-17.0* -type d)
 jvm_test=$(echo $jvms | awk '{if(NF>=1){print 1}else{print 0}}')
 
 if [[ $jvm_test -eq 1 ]]; then
-    echo " - Pass: Following Oracle JDK found:"
+    echo " - Pass: Following JDK found:"
     echo ""
     echo $jvms | awk '{gsub(/ /, "\n", $0);print}'
 else
-    echo "- Fail: No JDK found.  Please download and install a compatible JDK, such as AdoptOpenJDK:"
-    echo "https://adoptopenjdk.net/?variant=openjdk11&jvmVariant=hotspot"
+    echo "- Fail: No JDK found.  Please download and install a compatible JDK, such as Adoptium OpenJDK:"
+    echo "https://adoptium.net/temurin/releases/?version=17&package=jdk"
 #    exit 1
 fi
 
