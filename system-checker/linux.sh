@@ -4,7 +4,7 @@
 ####################################
 
 # Target Cytoscape version for this script
-CYTOSCAPE_VERSION="3.10.2"
+CYTOSCAPE_VERSION="3.10.3"
 
 # Cytoscpae App Store location
 APP_STORE_URL="apps.cytoscape.org"
