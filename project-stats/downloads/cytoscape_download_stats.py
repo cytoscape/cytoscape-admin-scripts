@@ -321,7 +321,7 @@ def plot_downloads(release_dict=None, version_list=None,
 
     ax.bar(x_pos, downloads, align='center')
     ax.set_xticks(x_pos)
-    ax.set_xticklabels(version_list)
+    ax.set_xticklabels(version_list, rotation=-45)
     ax.set_xlabel('Cytoscape Version', fontweight='bold')
     ax.set_ylabel('# Downloads', fontweight='bold')
     ax.invert_xaxis()  # labels read top-to-bottom
@@ -470,6 +470,8 @@ def main(args):
     version_list = sorted(final_dict.keys(), key=functools.cmp_to_key(compare_versions), reverse=True)
     add_days_as_primary_release(release_dict=final_dict, version_list=version_list)
     grand_total = 0
+    csv_data = []
+
     for version in version_list:
         total_dl = float(final_dict[version]['total_downloads'])
         rel_days = float(final_dict[version]['days_as_latest_release'])
@@ -482,6 +484,7 @@ def main(args):
               ', mac=' + str(final_dict[version]['mac_downloads']) +
               ', macarm=' + str(final_dict[version]['macarm_downloads']) +
               ', linux=' + str(final_dict[version]['linux_downloads']) + ')')
+        csv_data.append([str(final_dict[version]['created_at']), str(final_dict[version]['total_downloads'])])
         grand_total += final_dict[version]['total_downloads']
 
     num_rel_days = date.today() - final_dict[version_list[-1]]['created_at']
@@ -498,6 +501,16 @@ def main(args):
     plot_downloads_by_platform(release_dict=final_dict,
                                version_list=version_list,
                                outdir=theargs.outdir)
+    csv_data.reverse()
+    prev_total = 0
+    for entry in csv_data:
+        entry.append(str(prev_total + int(entry[1])))
+        prev_total = int(entry[2])
+    with open(os.path.join(theargs.outdir, 'cumulative_downloads.csv'), 'w') as f:
+        f.write('Date,Downloads,Cumulative Downloads\n')
+        for entry in csv_data:
+            f.write(entry[0] + ',' + entry[1] + ',' + entry[2] + '\n')
+        f.flush()
 
 
 if __name__ == '__main__':  # pragma: no cover
