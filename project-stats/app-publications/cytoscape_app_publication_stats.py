@@ -180,7 +180,7 @@ def download_medline_for_publications(urlprefix=None, outfile=None, toolargs=Non
     query_url = urlprefix + 'efetch.fcgi?db=pubmed&id=' + str(the_ids) + '&rettype=medline' + toolargs
     LOGGER.debug('Running query to download medline for id(s): ' + str(the_ids))
     res = requests.get(query_url)
-    if res.status_code is not 200:
+    if res.status_code!=200:
         LOGGER.error('Received code ' + str(res.status_code) + ' from query: ' + query_url)
         return False
     if res.text is not None:
@@ -222,7 +222,7 @@ def download_citing_publications(urlprefix=None, outfile=None, toolargs=None, th
                     str(the_ids) + toolargs
         LOGGER.debug('Running query to get citing publications for id(s): ' + str(the_ids))
         res = requests.get(query_url)
-        if res.status_code is not 200:
+        if res.status_code!=200:
             LOGGER.error('Received code ' + str(res.status_code) + ' from query: ' + query_url)
             return False
         with open(outfile, 'w') as f:
@@ -246,7 +246,7 @@ def get_ids_of_citing_publications(cited_json=None):
     if 'linksets' not in data:
         return []
 
-    if len(data['linksets']) is 0:
+    if len(data['linksets'])==0:
         return []
 
     if 'linksetdbs' not in data['linksets'][0]:
