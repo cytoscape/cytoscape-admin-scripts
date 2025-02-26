@@ -99,13 +99,50 @@ def process_access_logs(accessdir=None, start_dict=None):
         full_path = os.path.join(accessdir, entry)
         if not os.path.isfile(full_path):
             continue
-        bot_skipped += parse_access_log(accesslog=full_path, start_dict=start_dict)
+        bot_skipped += parse_access_log(accesslog=full_path, start_dict=start_dict,
+                                        date_extractor_func=_extract_day_month_year_from_log_entry)
     LOGGER.info('Skipped ' + str(bot_skipped) + ' bot lines')
     date_list = get_sorted_date_list(start_dict)
     return start_dict, date_list
 
 
-def parse_access_log(accesslog=None, start_dict=None):
+def _extract_day_month_year_from_log_entry(line):
+    """
+    Gets the Day/Month/Year from log entry assuming it looks like this:
+
+    ``1.2.3.4  - - [03/Apr/2022:06:25:21 -0700] "GET /cytoscape-news/news.html HTTP/1.1" 200 783 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.143 Safari/537.36"``
+
+    The above would return ``03/Apr/2022``
+
+    :param line: row of text in access.log file
+    :type line: str
+    :return:
+    """
+    date_start_index = line.index('[')
+    date_end_index = line.index(':')
+    return line[date_start_index + 1:date_end_index]
+
+
+def _extract_day_month_year_hour_from_log_entry(line):
+    """
+    Gets the Day/Month/Year from log entry assuming it looks like this:
+
+    ``1.2.3.4  - - [03/Apr/2022:06:25:21 -0700] "GET /cytoscape-news/news.html HTTP/1.1" 200 783 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.143 Safari/537.36"``
+
+    The above would return ``03/Apr/2022:06``
+
+    :param line:
+    :type line: str
+    :return:
+    """
+    date_start_index = line.index('[')
+    date_end_index = line.index(':')
+    hour_end_index = line[date_end_index+1:].index(':') + date_end_index + 1
+    return line[date_start_index+1:hour_end_index]
+
+
+def parse_access_log(accesslog=None, start_dict=None,
+                     date_extractor_func=_extract_day_month_year_from_log_entry):
     """
 
     :param accesslog:
@@ -125,14 +162,7 @@ def parse_access_log(accesslog=None, start_dict=None):
                 bot_skipped += 1
                 continue
 
-            # ip_end_index = line.index(' - - ')
-            date_start_index = line.index('[')
-            date_end_index = line.index(':')
-            # first_slash = line.index('/')
-            date_str = line[date_start_index+1:date_end_index]
-            # ip_address = line[0:ip_end_index]
-
-            # print(date_obj)
+            date_str = date_extractor_func(line)
             if date_str not in start_dict:
                 start_dict[date_str] = 0
             start_dict[date_str] += 1
@@ -189,10 +219,10 @@ def plot_starts_by_day(start_dict=None, date_list=None,
         counter += 1
 
     fig, ax = plt.subplots()
-
+    print(x_labels)
     ax.plot(date_list, start_list)
     ax.set_xticks(x_pos)
-    ax.set_xticklabels(x_labels)
+    ax.set_xticklabels(x_labels, rotation=-45)
     ax.set_xlabel('Year', fontweight='bold')
     ax.set_ylabel('# Starts', fontweight='bold')
 
@@ -213,7 +243,20 @@ def plot_starts_by_day(start_dict=None, date_list=None,
                 date_list[0] + ' - ' + date_list[-1] + ')\n')
 
 
-def get_sorted_date_list(start_dict=None):
+def get_sorted_date_list_with_hour(start_dict=None, format='%d/%b/%Y:%H'):
+    """
+    Get dates from **start_dict** in ascending order
+    as list
+
+    :param start_dict: dict of starts where key is date and value
+                       is number of starts
+    :type start_dict: dict
+    :return: dates as str in ascending order in a list
+    :rtype: list
+    """
+    return get_sorted_date_list(start_dict=start_dict, format=format)
+
+def get_sorted_date_list(start_dict=None, format='%d/%b/%Y'):
     """
     Get dates from **start_dict** in ascending order
     as list
@@ -225,7 +268,7 @@ def get_sorted_date_list(start_dict=None):
     :rtype: list
     """
     date_list = list(start_dict.keys())
-    date_list.sort(key=lambda xdate: datetime.strptime(xdate, '%d/%b/%Y'))
+    date_list.sort(key=lambda xdate: datetime.strptime(xdate, format))
     return date_list
 
 
@@ -328,7 +371,7 @@ def plot_starts_by_year(start_dict=None,
 
     ax.bar(x_pos, starts_list, align='center')
     ax.set_xticks(x_pos)
-    ax.set_xticklabels(year_list)
+    ax.set_xticklabels(year_list, rotation=-45)
     ax.set_xlabel('Year', fontweight='bold')
     ax.set_ylabel('# Starts', fontweight='bold')
 
