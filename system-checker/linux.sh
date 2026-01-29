@@ -122,7 +122,7 @@ fi
 # Test 2: Try java -version command
 echo -e "\n\e[;1m===== Checking Java Version =====\e[m\n"
 
-java_version_original=$(java -version 2>&1 | grep "openjdk version")
+java_version_original=$(java -version 2>&1 | egrep "java|openjdk version")
 java_version=$(echo $java_version_original | awk 'NR==1{gsub(/"/,""); print $3}')
 java_major_version=$(echo $java_version | awk -F'.' '{print $1}')
 
