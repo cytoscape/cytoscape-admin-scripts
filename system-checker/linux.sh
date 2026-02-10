@@ -161,16 +161,20 @@ ping_pass=true
 host $APP_STORE_URL || echo -e "\e[31mError: Could not resolve $APP_STORE_URL\e[m\n"; ping_pass=false
 
 if [[ $ping_pass ]];then
-    curl_result=$(curl -I https://apps.cytoscape.org | awk 'NR==1{print $2}')
-   
-    echo -e "\n\e[36m - Result: $curl_result\e[m"
-
-    if [[ $curl_result -eq "200" ]]; then
-        echo -e "\e[36m - Success!"
+    if ! command -v curl > /dev/null 2>&1 ; then
+        echo -e "\e[31mError: Cannot check status because curl is not installed. Please install curl\e[m\n"
+	curl_result=""
     else
-        echo -e "\e[31mError: Seems connection to App Store is unstable.\e[m\n"
-        echo "traceroute result:"
-        traceroute $APP_STORE_URL || echo -e "\n\e[31mError: Please install traceroute command.\e[m\n"
+        curl_result=$(curl -I https://apps.cytoscape.org | awk 'NR==1{print $2}')
+        echo -e "\n\e[36m - Result: $curl_result\e[m"
+
+        if [[ $curl_result -eq "200" ]]; then
+            echo -e "\e[36m - Success!"
+        else
+            echo -e "\e[31mError: Seems connection to App Store is unstable.\e[m\n"
+            echo "traceroute result:"
+            traceroute $APP_STORE_URL || echo -e "\n\e[31mError: Please install traceroute command.\e[m\n"
+        fi
     fi
 else
     pass=false
