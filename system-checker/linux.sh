@@ -119,29 +119,22 @@ else
     pass=false
 fi
 
-# Test 2: Try java -version command
-echo -e "\n\e[;1m===== Checking Java Version =====\e[m\n"
-
-java_version_original=$(java -version 2>&1 | egrep "java|openjdk version")
-java_version=$(echo $java_version_original | awk 'NR==1{gsub(/"/,""); print $3}')
-java_major_version=$(echo $java_version | awk -F'.' '{print $1}')
-
-if [[ $java_major_version == ${SUPPORTED_JAVA_VERSIONS[0]} ]]
-then
-    echo " - Pass: Current Java Version = $java_version"
-else
-    echo -e "\e[31mError: \"java\" command is not available"
-    echo -e "You need to set PATH to \$JAVA_HOME/bin.\e[m"
-    echo -e "\nYour current \$PATH:\n"
-    echo $PATH
-    pass=false
-fi
-
 # Tets 3: Check Java Home
 echo -e "\n\e[;1m===== Checking \$JAVA_HOME =====\e[m\n"
 
 if [[ $JAVA_HOME != "" ]]; then
     echo " - Pass: JAVA_HOME found: $JAVA_HOME"
+    java_version_original=$(${JAVA_HOME}/bin/java -version 2>&1 | egrep "java|openjdk version")
+    java_version=$(echo $java_version_original | awk 'NR==1{gsub(/"/,""); print $3}')
+    java_major_version=$(echo $java_version | awk -F'.' '{print $1}')
+
+    if [[ $java_major_version == ${SUPPORTED_JAVA_VERSIONS[0]} ]]
+    then
+        echo " - Pass: Current Java Version = $java_version"
+    else
+        echo -e "\e[31mError: Java major version: $java_major_version does not match any supported versions: ${SUPPORTED_JAVA_VERSIONS[@]}\e[m\n"
+        pass=false
+    fi
 else
     echo -e "\e[31mError: \$JAVA_HOME is not set.\e[m\n"
     echo -e "If you don't have Java yet, please download and install a compatible JDK such as AdoptOpenJDK:\n"
