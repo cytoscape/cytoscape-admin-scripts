@@ -37,17 +37,19 @@ Every value can be overridden with envioronment variables:
 | `MAVEN_HOME` | `/opt/maven` | Maven installation |
 | `PUBLISH_ROOT` | `/var/www/html/cytoscape-builds` | installers are published under `$PUBLISH_ROOT/Cytoscape-<version>/<date>`, where the version comes from the built tree's `pom.xml` |
 | `ADMIN_SCRIPTS_DIR` | the checkout this script is in | which checkout the notebook builds in |
-| `PORT` | `8888` | port Jupyter listens on |
+| `PORT` | `8889` | port Jupyter listens on |
 
 ```bash
 STARTING_BRANCH=release/3.11.1 PORT=8889 ./run-jupyter.sh
 ```
 
-Jupyter starts with `--no-browser`, so reach it by tunnelling from your workstation:
+Jupyter is bound to loopback and started without TLS, so reach it by tunnelling from your workstation and opening the URL the script prints — it contains the token:
 
 ```bash
 ssh -N -L 8889:localhost:8889 <user>@<build-machine>
 ```
+
+Binding loopback and clearing any token, password, and certificate configured in `~/.jupyter` means the tunnel plus that token are the only way in, and there is nothing listening off-host. The SSH tunnel already encrypts the connection, so a certificate on loopback would add nothing.
 
 Run the notebook from the top. Sections 5 and 6 publish to the web root and submit the Mac disk image for notarization, so stop before section 5 unless you intend to publish.
 

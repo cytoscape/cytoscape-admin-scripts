@@ -32,7 +32,7 @@
 #       this script's own checkout means running it from a test clone keeps the entire
 #       run inside that clone, leaving the live checkout untouched.
 #
-#   PORT               default: 8888
+#   PORT               default: 8889
 #       Port Jupyter listens on.  Jupyter is started with --no-browser, so reach it by
 #       tunnelling: ssh -N -L $PORT:localhost:$PORT <user>@<builder>
 #
@@ -41,6 +41,8 @@
 #   PATH is deliberately not set by this script.  Jupyter itself usually comes from
 #   Anaconda, so replacing PATH would make it unfindable.  The notebook rebuilds PATH
 #   from JAVA_HOME and MAVEN_HOME for the build itself, in section 1.
+#
+#   Jupyter is bound to 127.0.0.1 and started without TLS.
 #
 # USAGE
 #
@@ -75,7 +77,11 @@ export MAVEN_HOME=${MAVEN_HOME:-/opt/maven}
 export PUBLISH_ROOT=${PUBLISH_ROOT:-/var/www/html/cytoscape-builds}
 export ADMIN_SCRIPTS_DIR=${ADMIN_SCRIPTS_DIR:-$(cd "$HERE/../.." && pwd)}
 
-PORT=${PORT:-8888}
+PORT=${PORT:-8889}
+
+# A fresh login token per run.  Empty would mean no authentication at all.
+TOKEN=$(openssl rand -hex 16)
+[ -n "$TOKEN" ] || { echo "could not generate a token" 1>&2; exit 1; }
 
 # PATH is deliberately left alone here: Jupyter itself usually comes from Anaconda, and
 # the notebook rebuilds PATH from JAVA_HOME and MAVEN_HOME for the build in section 1.
@@ -130,15 +136,35 @@ else fail "git '$gv' is below 1.8.5 - cy.sh needs 'git -C'"; fi
 if command -v jupyter > /dev/null 2>&1; then pass "jupyter at $(command -v jupyter)"
 else fail "jupyter is not on PATH"; fi
 
+# Refuse a port that is already listening. 
+if (exec 3<>"/dev/tcp/127.0.0.1/$PORT") 2>/dev/null; then
+  exec 3<&- 3>&-
+  fail "port $PORT is already in use - stop that server or set PORT to a free one"
+else
+  pass "port $PORT is free"
+fi
+
 echo
 if [ "$FAILED" -ne 0 ]; then
   echo "$FAILED check(s) failed - not starting jupyter."
   exit 1
 fi
 
-echo "Starting jupyter on port $PORT.  Tunnel from your workstation with:"
+echo "Tunnel from your workstation:"
 echo "  ssh -N -L $PORT:localhost:$PORT $(whoami)@$(hostname)"
+echo
+echo "Then open:"
+echo "  http://localhost:$PORT/lab?token=$TOKEN"
 echo
 
 cd "$ADMIN_SCRIPTS_DIR" || exit 1
-exec jupyter lab --no-browser --port "$PORT"
+
+# Bound to loopback, without TLS.  These override ~/.jupyter.
+exec jupyter lab --no-browser \
+  --port "$PORT" \
+  --NotebookApp.port_retries=0 \
+  --NotebookApp.ip=127.0.0.1 \
+  --NotebookApp.token="$TOKEN" \
+  --NotebookApp.password='' \
+  --NotebookApp.certfile='' \
+  --NotebookApp.keyfile=''
