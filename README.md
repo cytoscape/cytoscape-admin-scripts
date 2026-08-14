@@ -43,6 +43,12 @@ Every value can be overridden with envioronment variables:
 STARTING_BRANCH=release/3.11.1 PORT=8889 ./run-jupyter.sh
 ```
 
+Jupyter starts with `--no-browser`, so reach it by tunnelling from your workstation:
+
+```bash
+ssh -N -L 8889:localhost:8889 <user>@<build-machine>
+```
+
 Run the notebook from the top. Sections 5 and 6 publish to the web root and submit the Mac disk image for notarization, so stop before section 5 unless you intend to publish.
 
 ### System checker script
