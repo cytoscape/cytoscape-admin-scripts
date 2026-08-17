@@ -102,13 +102,13 @@ if [ $? != 0 ] ; then
   fatal_error "Unable to cd to $BUILD_DIR/cytoscape/"
 fi
 
-./cy.sh init
+./cy.sh pull
 
-cd $BUILD_DIR/cytoscape/cytoscape
+#cd $BUILD_DIR/cytoscape/cytoscape
 
-if [ $? != 0 ] ; then
-  fatal_error "Unable to cd to $BUILD_DIR/cytoscape/cytoscape"
-fi
+#if [ $? != 0 ] ; then
+#  fatal_error "Unable to cd to $BUILD_DIR/cytoscape/cytoscape"
+#fi
 
 ./cy.sh run-all "git checkout ${STARTING_BRANCH}"
 ./cy.sh run-all 'git clean -f -d'
@@ -120,26 +120,26 @@ if [ $? != 0 ] ; then
   fatal_error "mvn clean install -Dmaven.test.skip=true failed"
 fi
 
-cd $BUILD_DIR/cytoscape/cytoscape/gui-distribution/packaging
+cd $BUILD_DIR/cytoscape/gui-distribution/packaging
 
 if [ $? != 0 ] ; then
-  fatal_error "Unable to cd to $BUILD_DIR/cytoscape/cytoscape/gui-distribution/packaging"
+  fatal_error "Unable to cd to $BUILD_DIR/cytoscape/gui-distribution/packaging"
 fi
 
 mvn clean install -U
 
 if [ $? != 0 ] ; then
-  fatal_error "mvn clean install -U failed"
+ fatal_error "mvn clean install -U failed"
 fi 
 
-cp -f $BUILD_DIR/cytoscape/cytoscape/gui-distribution/packaging/target/media/* $WEB_DIR
+cp -f $BUILD_DIR/cytoscape/gui-distribution/packaging/target/media/* $WEB_DIR
 if [ $? != 0 ] ; then
-  fatal_error "cp -f $BUILD_DIR/cytoscape/cytoscape/gui-distribution/packaging/target/media/* $WEB_DIR failed"
-fi
+  fatal_error "cp -f $BUILD_DIR/cytoscape/gui-distribution/packaging/target/media/* $WEB_DIR failed"
+ fi
 
-cp -f $BUILD_DIR/cytoscape/cytoscape/gui-distribution/assembly/target/*.{gz,zip} $WEB_DIR
+cp -f $BUILD_DIR/cytoscape/gui-distribution/assembly/target/*.{gz,zip} $WEB_DIR
 if [ $? != 0 ] ; then
-  fatal_error "cp -f $BUILD_DIR/cytoscape/cytoscape/gui-distribution/assembly/target/*.{gz,zip} $WEB_DIR failed"
+  fatal_error "cp -f $BUILD_DIR/cytoscape/gui-distribution/assembly/target/*.{gz,zip} $WEB_DIR failed"
 fi
 
 exit 0
