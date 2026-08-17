@@ -36,8 +36,8 @@ nosetests.xml
 .pydevproject
 
 .DS_Store
-./release-generator/create_next_rc/build
-./release-build/**
-./build_3.7.2/
+
+# Working directory the SNAPSHOT Release Builder notebook clones into
+release-build/
 
 project-stats/publications/CytoTumblrPosts.csv
